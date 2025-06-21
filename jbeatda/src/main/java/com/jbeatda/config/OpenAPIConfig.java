@@ -23,6 +23,8 @@ public class OpenAPIConfig {
                         .description("JBeatda 서비스의 API 명세서입니다.")
                         .version("v1.0.0"))
                 .servers(List.of(
+                        new Server().url("http://localhost:8080/api").description("Local Server"),
+                        new Server().url("http://172.30.1.42:8080/api").description("투썸"),
                         new Server().url("http://192.168.35.99:8080/api").description("서현 Server")
                 ))
 //                .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))

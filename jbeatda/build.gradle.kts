@@ -7,6 +7,11 @@ plugins {
 group = "com.jbeatda"
 version = "1.0-SNAPSHOT"
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
 repositories {
     mavenCentral()
 }
@@ -16,6 +21,8 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
 
     runtimeOnly("com.mysql:mysql-connector-j")
+
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
