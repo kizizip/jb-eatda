@@ -45,8 +45,12 @@ public class StoreController {
             )
     })
     public ResponseEntity<?> getAllStores(
-            @AuthenticationPrincipal UserDetails userDetails
+            @AuthenticationPrincipal UserDetails userDetails // Spring Security에서 현재 인증된 사용자 정보 주입
             ) {
+        // 현재 인증된 사용자의 ID 가져오기
+        // 1. 인증된 사용자가 있으면 userDetails에서 ID추출
+        // 2. userDetails가 null이면 다른 방식으로 현재 사용자 ID 가져오기 시도
+        // userId 필요하면 그냥 이거 복붙해서 쓰시면 됩니다. 필요없으면 말고... 이건 필요없는 api인데 예시로 적음
         Integer userId = userDetails != null ?
                 authUtils.getUserIdFromUserDetails(userDetails) :
                 authUtils.getCurrentUserId();
@@ -55,14 +59,17 @@ public class StoreController {
 
         ApiResult result = storeService.getAllStores();
 
+        // 응답 결과가 에러인 경우 처리 (ApiResponseDTO 타입으로 캐스팅 가능한 경우)
         if (result instanceof ApiResponseDTO<?> errorResult) {
-            String code = errorResult.getCode();
-            HttpStatus status = ApiResponseCode.fromCode(code).getHttpStatus();
-            ResponseEntity.status(status).body(errorResult);
+            String code = errorResult.getCode(); //에러 코드 추출
+            HttpStatus status = ApiResponseCode.fromCode(code).getHttpStatus(); //코드에 맞는 http 상태 가져오기
+            //에러 응답 반환
+            return ResponseEntity.status(status).body(errorResult);
         }
 
+        // 응답 결과가 StoreResponseDTO인 경우 (정상 응답)
         if (result instanceof StoreResponseDTO responseDTO) {
-            return ResponseEntity.ok(responseDTO.getStores());
+            return ResponseEntity.ok(responseDTO.getStores()); // 가게 목록만 추출해서 반환
         }
 
         return ResponseEntity.ok(result);
