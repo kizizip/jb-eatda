@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -59,10 +60,13 @@ public class SecurityConfig {
                         .requestMatchers("/users/**").permitAll() // 회원가입, 로그인 API 허용
                         .requestMatchers("/test").permitAll()  // 테스트 엔드포인트도 허용
                         .requestMatchers("/static/**", "/css/**", "/js/**").permitAll()
-                                .anyRequest().permitAll() // 임시로 모든 요청 허용
-//                        .anyRequest().authenticated()
+//                                .anyRequest().permitAll() // 임시로 모든 요청 허용
+                        .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf.disable());
+
+        // JWT 필터 추가
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
