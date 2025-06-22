@@ -27,14 +27,14 @@ public class OpenAPIConfig {
                         new Server().url("http://172.30.1.42:8080/api").description("투썸"),
                         new Server().url("http://192.168.35.99:8080/api").description("서현 Server")
                 ))
-//                .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
-//                .components(new io.swagger.v3.oas.models.Components()
-//                        .addSecuritySchemes(securitySchemeName,
-//                                new SecurityScheme()
-//                                        .name(securitySchemeName)
-//                                        .type(SecurityScheme.Type.HTTP)
-//                                        .scheme("bearer")
-//                                        .bearerFormat("JWT")))
+                .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
+                .components(new io.swagger.v3.oas.models.Components()
+                        .addSecuritySchemes(securitySchemeName,
+                                new SecurityScheme()
+                                        .name(securitySchemeName)
+                                        .type(SecurityScheme.Type.HTTP)
+                                        .scheme("bearer")
+                                        .bearerFormat("JWT")))
                 ;
     }
 
