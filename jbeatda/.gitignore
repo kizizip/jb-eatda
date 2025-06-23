@@ -50,4 +50,3 @@ bin/
 *.class
 target/
 
-.env
