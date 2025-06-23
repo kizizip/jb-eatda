@@ -3,7 +3,7 @@
     # 1단계 : Gradle을 사용해 빌드
     FROM azul/zulu-openjdk:17-latest AS builder
     WORKDIR /app
-    COPY . .
+    COPY ./jbeatda /app
     RUN chmod +x ./gradlew
     RUN ./gradlew clean build --no-daemon -x test
 
