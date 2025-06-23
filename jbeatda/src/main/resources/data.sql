@@ -1,1 +1,2 @@
-CREATE DATABASE JBeatda
+--data.sql
+--CREATE DATABASE JBeatda

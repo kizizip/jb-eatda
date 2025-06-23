@@ -7,9 +7,11 @@ spring:
   web:
     resources:
       static-locations: classpath:/static/
+
   sql:
-    mode: always
-    data-locations: classpath:data.sql
+    init:
+      mode: always
+      data-locations: classpath:data.sql
 
   # Redis 설정 추가
   data:
