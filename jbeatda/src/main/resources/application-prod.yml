@@ -1,10 +1,11 @@
 #application-prod.yml
 spring:
   datasource:
-    # Railway MySQL 연결 형식 수정
-    url: ${DATABASE_URL}
-    username: ${DATABASE_USER:root}
-    password: ${DATABASE_PASSWORD}
+    # Railway MySQL 플러그인 환경 변수로부터 JDBC URL 직접 조립
+    url: jdbc:mysql://${MYSQLHOST}:${MYSQLPORT}/${MYSQLDATABASE}
+    # Railway 플러그인이 노출하는 MySQL 사용자 & 암호
+    username: ${MYSQLUSER}
+    password: ${MYSQLPASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       maximum-pool-size: 5
