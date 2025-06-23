@@ -49,3 +49,5 @@ bin/
 *.log
 *.class
 target/
+
+.env

@@ -1,0 +1,26 @@
+#application-dev.yml
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/JBeatda
+    username: root
+    password: star9027
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  data:
+    redis:
+      host: localhost
+
+  jpa:
+    hibernate:
+      ddl-auto: update  # 운영: validate, 개발: update
+    show-sql: true        # SQL 쿼리 로그 출력
+    format-sql: true      # SQL 포맷팅
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+        use_sql_comments: true
+
+  jwt:
+    secret: 4RmV3wg4xmRFE37nrGmQCbXGPSNGgblHdRWTMro9ZHU=
+
