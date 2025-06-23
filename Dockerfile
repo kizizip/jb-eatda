@@ -1,21 +1,25 @@
-    #Dockerfile
+# 1단계 : Gradle을 사용해 빌드
+FROM azul/zulu-openjdk:17-latest AS builder
+WORKDIR /app
 
-    # 1단계 : Gradle을 사용해 빌드
-    FROM azul/zulu-openjdk:17-latest AS builder
-    WORKDIR /app
-    COPY ./jbeatda /app
-    RUN chmod +x ./gradlew
-    RUN ./gradlew clean build --no-daemon -x test
+# jbeatda 폴더의 내용을 /app에 복사
+COPY ./jbeatda/ ./
 
-    # 2단계 : 빌드된 JAR 파일만 실행 컨테이너로 복사
-    # base image
-    FROM azul/zulu-openjdk:17-latest
-    # set the working directory
-    WORKDIR /app
-    # copy the jar file
-    COPY --from=builder /app/build/libs/*.jar app.jar
+# gradlew 권한 설정
+RUN chmod +x ./gradlew
 
-    # Railway는 PORT 환경변수를 자동으로 설정
-    EXPOSE 8080
-    # run the jar file
-    ENTRYPOINT ["java", "-Dspring.profiles.active=prod", "-Duser.timezone=Asia/Seoul", "-jar", "/app/app.jar"]
+# 빌드 실행
+RUN ./gradlew clean build --no-daemon -x test
+
+# 2단계 : 실행 컨테이너
+FROM azul/zulu-openjdk:17-latest
+WORKDIR /app
+
+# 빌드된 JAR 파일 복사
+COPY --from=builder /app/build/libs/*.jar app.jar
+
+# Railway는 PORT 환경변수를 자동으로 설정
+EXPOSE 8080
+
+# 애플리케이션 실행
+ENTRYPOINT ["java", "-Dspring.profiles.active=prod", "-Duser.timezone=Asia/Seoul", "-jar", "/app/app.jar"]
