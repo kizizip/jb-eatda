@@ -1,0 +1,46 @@
+#application-prod.yml
+spring:
+  datasource:
+    # Railway MySQL 플러그인 환경 변수로부터 JDBC URL 직접 조립
+    url: jdbc:mysql://${MYSQLHOST}:${MYSQLPORT}/${MYSQLDATABASE}
+    # Railway 플러그인이 노출하는 MySQL 사용자 & 암호
+    username: ${MYSQLUSER}
+    password: ${MYSQLPASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 5
+      connection-timeout: 30000
+
+  data:
+    redis:
+      # Railway Redis 연결 정보
+      host: ${REDISHOST}
+      port: ${REDISPORT:6379}
+      password: ${REDISPASSWORD:}
+
+  jpa:
+    hibernate:
+      ddl-auto: update  # 첫 배포시는 update, 이후 validate로 변경
+    show-sql: false        # 운영은 false 권장?
+    format-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+
+
+  jwt:
+    secret: ${JWT_SECRET}
+    expiration: 2592000000
+    refresh-expiration: 2592000000
+
+  server:
+    port: ${PORT:8080}  # Railway PORT 환경변수 사용
+    servlet:
+      context-path: /api
+
+  management:
+    endpoints:
+      web:
+        exposure:
+          include: health
+
