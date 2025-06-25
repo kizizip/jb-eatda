@@ -3,7 +3,8 @@ package com.jbeatda.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisPassword;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -17,17 +18,19 @@ public class RedisConfig {
     @Value("${spring.data.redis.port}")
     private int redisPort;
 
-    // 비밀번호 프로퍼티 주입
-    @Value("${spring.data.redis.password:}")   // 기본값 빈 문자열
+    // PROD 환경변수에 등록한 비밀번호를 주입(없으면 빈 문자열)
+    @Value("${spring.data.redis.password:}")
     private String redisPassword;
 
     @Bean
-    public RedisConnectionFactory redisConnectionFactory() {
-        LettuceConnectionFactory cf = new LettuceConnectionFactory(redisHost, redisPort);
+    public LettuceConnectionFactory redisConnectionFactory() {
+        // RedisStandaloneConfiguration 에 호스트/포트/비밀번호 설정
+        RedisStandaloneConfiguration cfg =
+                new RedisStandaloneConfiguration(redisHost, redisPort);
         if (!redisPassword.isBlank()) {
-            cf.setPassword(redisPassword);      // AUTH 명령 설정
+            cfg.setPassword(RedisPassword.of(redisPassword));
         }
-        return cf;
+        return new LettuceConnectionFactory(cfg);
     }
 
     @Bean
