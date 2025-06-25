@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class StoreListResponseDTO implements ApiResult {
+public class DoStoreListResponseDTO implements ApiResult {
     private AreaInfo areaInfo;
     private List<StoreInfo> stores;
     private Pagination pagination;

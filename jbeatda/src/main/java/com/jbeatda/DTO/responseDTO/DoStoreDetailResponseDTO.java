@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class StoreDetailResponseDTO implements ApiResult {
+public class DoStoreDetailResponseDTO implements ApiResult {
 
     private String storeName;
     private String storeImage;
