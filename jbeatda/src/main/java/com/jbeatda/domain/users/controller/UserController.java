@@ -45,7 +45,12 @@ public class UserController {
      */
     @PostMapping("/login")
     public ResponseEntity<UserResponseDTO.LoginResponse> login(
-            @Valid @RequestBody UserRequestDTO.LoginRequest request) {
+            @Valid @RequestBody UserRequestDTO.LoginRequest request,
+            @RequestHeader(value = "Authorization", required = false) String authHeader) {
+
+        // Authorization 헤더 무시하거나 로그만 찍기
+        log.info("로그인 요청 Authorization 헤더: {}", authHeader);
+
         try {
             UserResponseDTO.LoginResponse response = userService.login(request);
             return ResponseEntity.ok(response);
