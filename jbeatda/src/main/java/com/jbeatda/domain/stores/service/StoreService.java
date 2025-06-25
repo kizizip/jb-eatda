@@ -2,12 +2,17 @@ package com.jbeatda.domain.stores.service;
 
 import com.jbeatda.DTO.external.DoStoreDetailApiResponseDTO;
 import com.jbeatda.DTO.external.DoStoreListApiResponseDTO;
-import com.jbeatda.DTO.responseDTO.StoreDetailResponseDTO;
-import com.jbeatda.DTO.responseDTO.StoreListResponseDTO;
+import com.jbeatda.DTO.external.JbStoreDetailApiResponseDTO;
+import com.jbeatda.DTO.external.JbStoreListApiResponseDTO;
+import com.jbeatda.DTO.requestDTO.SearchStoreRequestDTO;
+import com.jbeatda.DTO.responseDTO.DoStoreDetailResponseDTO;
+import com.jbeatda.DTO.responseDTO.DoStoreListResponseDTO;
+import com.jbeatda.DTO.responseDTO.JbStoreListResponseDTO;
 import com.jbeatda.DTO.responseDTO.StoreResponseDTO;
 import com.jbeatda.Mapper.StoreDetailMapper;
 import com.jbeatda.Mapper.StoreMapper;
 import com.jbeatda.domain.stores.client.DoStoreApiClient;
+import com.jbeatda.domain.stores.client.JbStoreApiClient;
 import com.jbeatda.domain.stores.client.KakaoClient;
 import com.jbeatda.domain.stores.entity.Store;
 import com.jbeatda.domain.stores.repository.StoreRepository;
@@ -28,6 +33,7 @@ public class StoreService {
     private final StoreMapper storeMapper;
     private final KakaoClient kakaoClient;
     private final StoreDetailMapper storeDetailMapper;
+    private final JbStoreApiClient jbStoreApiClient;
 
     // 전체 가게 목록 조회
     public ApiResult getAllStores() {
@@ -50,26 +56,54 @@ public class StoreService {
         // 1. 외부 API 호출
         List<DoStoreListApiResponseDTO.StoreItem> apiItems = doStoreApiClient.doStoreList(area);
         // 2. DTO 변환
-        StoreListResponseDTO response = storeMapper.toStoreListResponse(area, apiItems);
+        DoStoreListResponseDTO response = storeMapper.toDoStoreListResponse(area, apiItems);
         // 3. 반환
         return response ;
     }
 
 
-    public ApiResult getStoresDetail(int storeId){
-
+    public ApiResult getStoresDetail(int storeId, String apiType) {
         String store = String.valueOf(storeId);
-        // 1. 외부 API 호출
+
+        if (apiType.equals("do")) {
+            return getDoStoreDetail(store);
+        } else {
+            return getJbStoreDetail(store);
+        }
+    }
+
+    private ApiResult getDoStoreDetail(String store) {
+        // 1. DO API 호출
         DoStoreDetailApiResponseDTO.StoreDetail apiItem = doStoreApiClient.doStoreDetail(store);
+
         // 2. 경도, 위도 받아오기
         List<String> point = kakaoClient.getPoint(apiItem.getAddress());
+
         // 3. DTO 변환
-        StoreDetailResponseDTO response = storeDetailMapper.toStoreDetailResponse(apiItem, point);
+        return storeDetailMapper.toDoStoreDetailResponse(apiItem, point);
+    }
 
-        return response;
+    private ApiResult getJbStoreDetail(String store) {
+        // 1. JB API 호출
+        JbStoreDetailApiResponseDTO.StoreDetail apiItem = jbStoreApiClient.jbStoreDetail(store);
 
+        // 2. 경도, 위도 받아오기
+        List<String> point = kakaoClient.getPoint(apiItem.getAddress());
 
+        // 3. DTO 변환
+        return storeDetailMapper.toJbStoreDetailResponse(apiItem, point);
+    }
+
+    public ApiResult searchStore(SearchStoreRequestDTO searchStoreRequestDTO){
+
+        // 1. 외부 API 호출
+        List<JbStoreListApiResponseDTO.StoreItem> apiItems = jbStoreApiClient.jbStoreList(searchStoreRequestDTO);
+        // 2. DTO 변환
+        JbStoreListResponseDTO response = storeMapper.toJbStoreListResponse(apiItems);
+        // 3. 반환
+        return response ;
 
     }
+
 
 }

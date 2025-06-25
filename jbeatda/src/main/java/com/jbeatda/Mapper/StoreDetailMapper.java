@@ -1,9 +1,8 @@
 package com.jbeatda.Mapper;
 
 import com.jbeatda.DTO.external.DoStoreDetailApiResponseDTO;
-import com.jbeatda.DTO.responseDTO.StoreDetailResponseDTO;
-import com.jbeatda.domain.stores.client.DoStoreApiClient;
-import com.jbeatda.domain.stores.client.KakaoClient;
+import com.jbeatda.DTO.external.JbStoreDetailApiResponseDTO;
+import com.jbeatda.DTO.responseDTO.DoStoreDetailResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,9 +10,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 도지정향토음식점- 상세 api 에서 받아온 응답을 dto로 변환
+ * 도지정향토음식점, 전북향토음식점 - 상세 api 에서 받아온 응답을 dto로 변환
  */
-
 @Service
 @Slf4j
 @AllArgsConstructor
@@ -22,7 +20,7 @@ public class StoreDetailMapper {
     /**
      * DoStore API 응답 + Kakao API 좌표를 최종 응답 DTO로 매핑
      */
-    public StoreDetailResponseDTO toStoreDetailResponse(
+    public DoStoreDetailResponseDTO toDoStoreDetailResponse(
             DoStoreDetailApiResponseDTO.StoreDetail storeDetail,
             List<String> coordinates) {
 
@@ -31,7 +29,7 @@ public class StoreDetailMapper {
             return null;
         }
 
-        return StoreDetailResponseDTO.builder()
+        return DoStoreDetailResponseDTO.builder()
                 .storeName(storeDetail.getName())
                 .storeImage(storeDetail.getImg())
                 .area(storeDetail.getArea())
@@ -50,11 +48,46 @@ public class StoreDetailMapper {
     /**
      * DoStore API 응답만으로 DTO 생성 (좌표 없이)
      */
-    public StoreDetailResponseDTO toStoreDetailResponse(DoStoreDetailApiResponseDTO.StoreDetail storeDetail) {
-        return toStoreDetailResponse(storeDetail, null);
+    public DoStoreDetailResponseDTO toDoStoreDetailResponse(DoStoreDetailApiResponseDTO.StoreDetail storeDetail) {
+        return toDoStoreDetailResponse(storeDetail, null);
     }
 
-    // 유틸리티 메서드들
+    /**
+     * JbStore API 응답 + Kakao API 좌표를 최종 응답 DTO로 매핑
+     */
+    public DoStoreDetailResponseDTO toJbStoreDetailResponse(
+            JbStoreDetailApiResponseDTO.StoreDetail storeDetail,
+            List<String> coordinates) {
+
+        if (storeDetail == null) {
+            log.warn("JbStoreDetail이 null입니다.");
+            return null;
+        }
+
+        return DoStoreDetailResponseDTO.builder()
+                .storeName(storeDetail.getName())
+                .storeImage(buildJbImageUrl(storeDetail.getImg()))
+                .area(storeDetail.getArea())
+                .address(storeDetail.getAddress())
+                .smenu(parseJbMenu(storeDetail.getFood(), storeDetail.getSmenu()))
+                .time(storeDetail.getTime())
+                .holiday(storeDetail.getHolyday())
+                .tel(storeDetail.getTel())
+                .sno(storeDetail.getSno())
+                .park(convertParkFlag(storeDetail.getPark()))
+                .lat(extractLatitude(coordinates))
+                .lng(extractLongitude(coordinates))
+                .build();
+    }
+
+    /**
+     * JbStore API 응답만으로 DTO 생성 (좌표 없이)
+     */
+    public DoStoreDetailResponseDTO toJbStoreDetailResponse(JbStoreDetailApiResponseDTO.StoreDetail storeDetail) {
+        return toJbStoreDetailResponse(storeDetail, null);
+    }
+
+    // 공통 유틸리티 메서드들
     private boolean convertParkFlag(String parkFlag) {
         if (parkFlag == null || parkFlag.trim().isEmpty()) {
             return false;
@@ -82,5 +115,26 @@ public class StoreDetailMapper {
         }
         log.warn("좌표 정보에서 경도를 추출할 수 없습니다.");
         return null;
+    }
+
+    // JB API 전용 유틸리티 메서드들
+    private String buildJbImageUrl(String imageName) {
+        if (imageName == null || imageName.trim().isEmpty() || "null".equals(imageName)) {
+            return null;
+        }
+        // JB API 이미지 베이스 URL과 조합 (파이프 구분자로 분리된 첫 번째 값 사용)
+        String fileName = imageName.split("\\|")[0];
+        return "http://jbfood.go.kr/datafloder/foodimg/" + fileName;
+    }
+
+    private String parseJbMenu(String food, String smenu) {
+        // FOOD 필드를 우선 사용, 없으면 SMENU 사용
+        if (food != null && !food.trim().isEmpty()) {
+            return food.replace("^", ", ").replace("|", ", ");
+        }
+        if (smenu != null && !smenu.trim().isEmpty()) {
+            return smenu.replace("^", ", ").replace("|", ", ");
+        }
+        return "메뉴 정보 없음";
     }
 }

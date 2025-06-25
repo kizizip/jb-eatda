@@ -1,8 +1,9 @@
 package com.jbeatda.Mapper;
 
-
 import com.jbeatda.DTO.external.DoStoreListApiResponseDTO;
-import com.jbeatda.DTO.responseDTO.StoreListResponseDTO;
+import com.jbeatda.DTO.external.JbStoreListApiResponseDTO;
+import com.jbeatda.DTO.responseDTO.DoStoreListResponseDTO;
+import com.jbeatda.DTO.responseDTO.JbStoreListResponseDTO;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -10,61 +11,113 @@ import java.util.stream.Collectors;
 
 @Component
 /**
- *  도지정향토음식점- 목록 api 에서 받아온 응답을 dto로 변환
+ * 도지정향토음식점, 전북향토음식점 - 목록 api 에서 받아온 응답을 dto로 변환
  */
 public class StoreMapper {
 
-    public StoreListResponseDTO toStoreListResponse(String area, List<DoStoreListApiResponseDTO.StoreItem> apiItems) {
+    //  DoStore 매핑 메서드
+    public DoStoreListResponseDTO toDoStoreListResponse(String area, List<DoStoreListApiResponseDTO.StoreItem> apiItems) {
         // Area 정보 생성
-        StoreListResponseDTO.AreaInfo areaInfo = createAreaInfo(area);
+        DoStoreListResponseDTO.AreaInfo areaInfo = createAreaInfo(area);
 
         // Store 목록 변환
-        List<StoreListResponseDTO.StoreInfo> stores = apiItems.stream()
+        List<DoStoreListResponseDTO.StoreInfo> stores = apiItems.stream()
                 .map(this::toStoreInfo)
                 .collect(Collectors.toList());
 
         // Pagination 정보 생성
-        StoreListResponseDTO.Pagination pagination = createPagination(stores.size());
+        DoStoreListResponseDTO.Pagination pagination = createPagination(stores.size());
 
-        return StoreListResponseDTO.builder()
+        return DoStoreListResponseDTO.builder()
                 .areaInfo(areaInfo)
                 .stores(stores)
                 .pagination(pagination)
                 .build();
     }
 
-    private StoreListResponseDTO.StoreInfo toStoreInfo(DoStoreListApiResponseDTO.StoreItem apiItem) {
-        return StoreListResponseDTO.StoreInfo.builder()
-                .storeId(generateStoreId(apiItem.getSno())) // SNO를 기반으로 ID 생성
+    //  JbStore 매핑 메서드
+    public JbStoreListResponseDTO toJbStoreListResponse(List<JbStoreListApiResponseDTO.StoreItem> apiItems) {
+        // Store 목록 변환
+        List<JbStoreListResponseDTO.StoreInfo> stores = apiItems.stream()
+                .map(this::toJbStoreInfo)
+                .collect(Collectors.toList());
+
+        // Pagination 정보 생성
+        JbStoreListResponseDTO.Pagination pagination = createJbPagination(stores.size());
+
+        JbStoreListResponseDTO response = new JbStoreListResponseDTO();
+        response.setStores(stores);
+        response.setPagination(pagination);
+
+        return response;
+    }
+
+    //  DoStore 변환 메서드
+    private DoStoreListResponseDTO.StoreInfo toStoreInfo(DoStoreListApiResponseDTO.StoreItem apiItem) {
+        return DoStoreListResponseDTO.StoreInfo.builder()
+                .storeId(generateStoreId(apiItem.getSno()))
                 .storeName(apiItem.getName())
                 .storeImage(apiItem.getImg())
                 .address(apiItem.getAddress())
-                .smenu(generateDefaultMenu()) // 기본 메뉴 (API에 메뉴 정보가 없음)
+                .smenu(generateDefaultMenu())
                 .time(apiItem.getTime())
-                .holiday(generateDefaultHoliday()) // 기본 휴일 정보
+                .holiday(generateDefaultHoliday())
                 .tel(apiItem.getTel())
                 .sno(apiItem.getSno())
-                .park(generateDefaultPark()) // 기본 주차 정보
+                .park(generateDefaultPark())
                 .build();
     }
 
-    private StoreListResponseDTO.AreaInfo createAreaInfo(String areaCode) {
-        return StoreListResponseDTO.AreaInfo.builder()
+    //  JbStore 변환 메서드
+    private JbStoreListResponseDTO.StoreInfo toJbStoreInfo(JbStoreListApiResponseDTO.StoreItem apiItem) {
+        return JbStoreListResponseDTO.StoreInfo.builder()
+                .storeId(generateStoreId(apiItem.getSno()))
+                .storeName(apiItem.getName())
+                .storeImage(buildImageUrl(apiItem.getImg()))
+                .area(apiItem.getArea())
+                .address(apiItem.getAddress())
+                .smenu(parseMenu(apiItem.getSmenu()))
+                .time(apiItem.getTime())
+                .holiday(generateJbDefaultHoliday()) // JB API는 휴일 정보가 없음
+                .tel(apiItem.getTel())
+                .sno(apiItem.getSno())
+                .park(generateJbDefaultPark()) // JB API는 주차 정보가 없음
+                .build();
+    }
+
+
+    private DoStoreListResponseDTO.AreaInfo createAreaInfo(String areaCode) {
+        return DoStoreListResponseDTO.AreaInfo.builder()
                 .areaId(areaCode)
                 .areaName(getAreaName(areaCode))
                 .build();
     }
 
-    private StoreListResponseDTO.Pagination createPagination(int totalCount) {
+    private DoStoreListResponseDTO.Pagination createPagination(int totalCount) {
         int pageSize = 10;
-        int totalPages = (totalCount + pageSize - 1) / pageSize; // 올림 계산
+        int totalPages = (totalCount + pageSize - 1) / pageSize;
 
-        return StoreListResponseDTO.Pagination.builder()
+        return DoStoreListResponseDTO.Pagination.builder()
                 .currentPage(1)
-                .totalPages(Math.max(totalPages, 1)) // 최소 1페이지
+                .totalPages(Math.max(totalPages, 1))
                 .totalCount(totalCount)
                 .pageSize(pageSize)
-                .hasNext(false) // 현재는 페이징 처리 안 함
+                .hasNext(false)
+                .hasPrev(false)
+                .build();
+    }
+
+    //  JB 페이지네이션 생성
+    private JbStoreListResponseDTO.Pagination createJbPagination(int totalCount) {
+        int pageSize = 20; // JB API는 20개씩
+        int totalPages = (totalCount + pageSize - 1) / pageSize;
+
+        return JbStoreListResponseDTO.Pagination.builder()
+                .currentPage(1)
+                .totalPages(Math.max(totalPages, 1))
+                .totalCount((long) totalCount)
+                .pageSize(pageSize)
+                .hasNext(false)
                 .hasPrev(false)
                 .build();
     }
@@ -74,12 +127,11 @@ public class StoreMapper {
         try {
             return Long.parseLong(sno);
         } catch (NumberFormatException e) {
-            return (long) sno.hashCode(); // SNO를 숫자로 변환할 수 없으면 해시코드 사용
+            return (long) sno.hashCode();
         }
     }
 
     private String getAreaName(String areaCode) {
-        // 지역 코드를 지역명으로 변환
         switch (areaCode) {
             case "01": return "고창군";
             case "02": return "군산시";
@@ -99,18 +151,41 @@ public class StoreMapper {
         }
     }
 
+    // JB API 전용 메서드들
+    private String buildImageUrl(String imageName) {
+        if (imageName == null || imageName.trim().isEmpty() || "null".equals(imageName)) {
+            return null;
+        }
+        // JB API 이미지 베이스 URL과 조합
+        return "http://jbfood.go.kr/datafloder/foodimg/" + imageName.split("\\|")[0];
+    }
+
+    private String parseMenu(String menuString) {
+        if (menuString == null || menuString.trim().isEmpty()) {
+            return "메뉴 정보 없음";
+        }
+        // ^나 | 등의 구분자를 콤마로 변경
+        return menuString.replace("^", ", ").replace("|", ", ");
+    }
+
+    private String generateJbDefaultHoliday() {
+        return "매장에 문의";
+    }
+
+    private Boolean generateJbDefaultPark() {
+        return null; // 주차 정보가 없으므로 null
+    }
+
+    // 기존 DoStore 전용 메서드들
     private String generateDefaultMenu() {
-        // API에서 제공하지 않는 정보이므로 기본값 또는 null
-        return "전통 향토음식"; // 또는 null
+        return "전통 향토음식";
     }
 
     private String generateDefaultHoliday() {
-        // API에서 제공하지 않는 정보이므로 기본값
-        return "문의 바람"; // 또는 null
+        return "문의 바람";
     }
 
     private Boolean generateDefaultPark() {
-        // API에서 제공하지 않는 정보이므로 기본값
-        return null; // 또는 false
+        return null;
     }
 }
