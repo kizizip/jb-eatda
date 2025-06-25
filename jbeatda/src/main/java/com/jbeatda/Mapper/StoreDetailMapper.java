@@ -1,0 +1,86 @@
+package com.jbeatda.Mapper;
+
+import com.jbeatda.DTO.external.DoStoreDetailApiResponseDTO;
+import com.jbeatda.DTO.responseDTO.StoreDetailResponseDTO;
+import com.jbeatda.domain.stores.client.DoStoreApiClient;
+import com.jbeatda.domain.stores.client.KakaoClient;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * 도지정향토음식점- 상세 api 에서 받아온 응답을 dto로 변환
+ */
+
+@Service
+@Slf4j
+@AllArgsConstructor
+public class StoreDetailMapper {
+
+    /**
+     * DoStore API 응답 + Kakao API 좌표를 최종 응답 DTO로 매핑
+     */
+    public StoreDetailResponseDTO toStoreDetailResponse(
+            DoStoreDetailApiResponseDTO.StoreDetail storeDetail,
+            List<String> coordinates) {
+
+        if (storeDetail == null) {
+            log.warn("StoreDetail이 null입니다.");
+            return null;
+        }
+
+        return StoreDetailResponseDTO.builder()
+                .storeName(storeDetail.getName())
+                .storeImage(storeDetail.getImg())
+                .area(storeDetail.getArea())
+                .address(storeDetail.getAddress())
+                .smenu(storeDetail.getFood())
+                .time(storeDetail.getTime())
+                .holiday(storeDetail.getHolyday())
+                .tel(storeDetail.getTel())
+                .sno(storeDetail.getSno())
+                .park(convertParkFlag(storeDetail.getPark()))
+                .lat(extractLatitude(coordinates))
+                .lng(extractLongitude(coordinates))
+                .build();
+    }
+
+    /**
+     * DoStore API 응답만으로 DTO 생성 (좌표 없이)
+     */
+    public StoreDetailResponseDTO toStoreDetailResponse(DoStoreDetailApiResponseDTO.StoreDetail storeDetail) {
+        return toStoreDetailResponse(storeDetail, null);
+    }
+
+    // 유틸리티 메서드들
+    private boolean convertParkFlag(String parkFlag) {
+        if (parkFlag == null || parkFlag.trim().isEmpty()) {
+            return false;
+        }
+
+        String normalized = parkFlag.trim().toLowerCase();
+        return "y".equals(normalized) || "yes".equals(normalized);
+    }
+
+    private String extractLatitude(List<String> coordinates) {
+        if (coordinates != null && coordinates.size() >= 2) {
+            String latitude = coordinates.get(0);
+            log.debug("위도 추출 완료: {}", latitude);
+            return latitude;
+        }
+        log.warn("좌표 정보에서 위도를 추출할 수 없습니다.");
+        return null;
+    }
+
+    private String extractLongitude(List<String> coordinates) {
+        if (coordinates != null && coordinates.size() >= 2) {
+            String longitude = coordinates.get(1);
+            log.debug("경도 추출 완료: {}", longitude);
+            return longitude;
+        }
+        log.warn("좌표 정보에서 경도를 추출할 수 없습니다.");
+        return null;
+    }
+}
