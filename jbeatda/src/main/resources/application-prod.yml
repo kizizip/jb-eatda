@@ -42,3 +42,9 @@ spring:
         exposure:
           include: health
 
+logging:
+  level:
+    root: INFO                # 전체 로그 레벨을 INFO로
+    com.jbeatda: INFO         # com.jbeatda 패키지 하위만 INFO로 올려도 됩니다
+
+
