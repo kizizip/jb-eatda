@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/dest_course">
+
+
+    <fragment
+        android:id="@+id/dest_course"
+        android:name="com.example.jbeatda.ui.course.CourseFragment"
+        android:label="fragment_course"
+        tools:layout="@layout/fragment_course" />
+    <fragment
+        android:id="@+id/dest_my"
+        android:name="com.example.jbeatda.ui.my.MyFragment"
+        android:label="fragment_my"
+        tools:layout="@layout/fragment_my" />
+    <fragment
+        android:id="@+id/dest_search"
+        android:name="com.example.jbeatda.ui.search.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" />
+</navigation>
