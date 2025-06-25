@@ -5,9 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="34dff17b-7f47-48ac-abc4-07301115de8f" name="변경" comment="">
-      <change afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/areas/controller/AreaController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/areas/repository/AreaRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/areas/service/AreaService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/DTO/responseDTO/MenuResponseDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/menus/controller/MenuController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/menus/repository/MenuRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/menus/service/MenuService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/exception/ApiResponseCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/exception/ApiResponseCode.java" afterDir="false" />
     </list>
@@ -63,15 +64,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Gradle.jbeatda [:com.jbeatda.JbeatdaApplication.main()].executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;be/feat/area-list&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Gradle.jbeatda [:com.jbeatda.JbeatdaApplication.main()].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "be/feat/menu-list"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
