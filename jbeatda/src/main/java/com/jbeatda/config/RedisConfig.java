@@ -17,9 +17,17 @@ public class RedisConfig {
     @Value("${spring.data.redis.port}")
     private int redisPort;
 
+    // 비밀번호 프로퍼티 주입
+    @Value("${spring.data.redis.password:}")   // 기본값 빈 문자열
+    private String redisPassword;
+
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        return new LettuceConnectionFactory(redisHost, redisPort);
+        LettuceConnectionFactory cf = new LettuceConnectionFactory(redisHost, redisPort);
+        if (!redisPassword.isBlank()) {
+            cf.setPassword(redisPassword);      // AUTH 명령 설정
+        }
+        return cf;
     }
 
     @Bean
