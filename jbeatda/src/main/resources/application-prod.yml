@@ -34,6 +34,8 @@ spring:
 
   server:
     port: ${PORT:8080}  # Railway PORT 환경변수 사용
+    servlet:
+      context-path: /api
 
   management:
     endpoints:
