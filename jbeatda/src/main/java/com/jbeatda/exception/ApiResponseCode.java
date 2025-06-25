@@ -14,6 +14,7 @@ public enum ApiResponseCode {
     BAD_REQUEST("400", "잘못된 요청입니다.", HttpStatus.BAD_REQUEST),
     NOT_FOUND_USER("404-1", "유저를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     NO_STORES_FOUND("404-2", "저장된 가게가 없습니다.", HttpStatus.NOT_FOUND),
+    NO_AREAS_FOUND("404-3", "저장된 지역이 없습니다", HttpStatus.NOT_FOUND),
     UNAUTHORIZED("403-1", "권한이 없습니다.", HttpStatus.UNAUTHORIZED),
     SERVER_ERROR("500", "서버 내부 오류입니다.", HttpStatus.INTERNAL_SERVER_ERROR);
 
