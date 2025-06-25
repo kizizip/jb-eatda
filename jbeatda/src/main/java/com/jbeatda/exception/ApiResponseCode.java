@@ -15,7 +15,8 @@ public enum ApiResponseCode {
     NOT_FOUND_USER("404-1", "유저를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     NO_STORES_FOUND("404-2", "저장된 가게가 없습니다.", HttpStatus.NOT_FOUND),
     NO_AREAS_FOUND("404-3", "저장된 지역이 없습니다", HttpStatus.NOT_FOUND),
-    NO_MENUS_FOUND("404-4", "저장된 메뉴가 없습니다", HttpStatus.NOT_FOUND),
+    NO_MENUS_FOUND("404-4", "메뉴를 찾을 수 없습니다", HttpStatus.NOT_FOUND),
+    NO_STAMPS_FOUND("404-5", "사용자의 스탬프가 존재하지 않습니다.", HttpStatus.NOT_FOUND),
     UNAUTHORIZED("403-1", "권한이 없습니다.", HttpStatus.UNAUTHORIZED),
     SERVER_ERROR("500", "서버 내부 오류입니다.", HttpStatus.INTERNAL_SERVER_ERROR),
 
