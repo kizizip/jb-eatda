@@ -31,19 +31,16 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<String, String> redisTemplate() {
-        RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(redisConnectionFactory());
-
-        // String 직렬화 설정
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new StringRedisSerializer());
-        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-        redisTemplate.setHashValueSerializer(new StringRedisSerializer());
-
-        redisTemplate.setDefaultSerializer(new StringRedisSerializer());
-        redisTemplate.afterPropertiesSet();
-
-        return redisTemplate;
+    public RedisTemplate<String, String> redisTemplate(
+            LettuceConnectionFactory cf) {
+        RedisTemplate<String, String> tpl = new RedisTemplate<>();
+        tpl.setConnectionFactory(cf);
+        // key/value 직렬화
+        tpl.setKeySerializer(new StringRedisSerializer());
+        tpl.setValueSerializer(new StringRedisSerializer());
+        tpl.setHashKeySerializer(new StringRedisSerializer());
+        tpl.setHashValueSerializer(new StringRedisSerializer());
+        tpl.afterPropertiesSet();
+        return tpl;
     }
 }
