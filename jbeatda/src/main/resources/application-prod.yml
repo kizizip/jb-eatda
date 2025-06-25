@@ -10,12 +10,11 @@ spring:
     hikari:
       maximum-pool-size: 5
       connection-timeout: 30000
-
-  redis:
-    # Railway Redis 연결 정보
-    host: ${REDISHOST}
-    port: ${REDISPORT:6379}
-    password: ${REDISPASSWORD:}
+  data:
+    redis:
+      host: ${REDISHOST}
+      port: ${REDISPORT:6379}
+      password: ${REDISPASSWORD:}
 
   jpa:
     hibernate:
