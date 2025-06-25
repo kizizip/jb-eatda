@@ -4,6 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< be/feat/stamp-api
     <list default="true" id="34dff17b-7f47-48ac-abc4-07301115de8f" name="변경" comment="">
       <change afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/DTO/requestDTO/StampRequestDTO.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/DTO/responseDTO/StampResponseDTO.java" afterDir="false" />
@@ -14,6 +15,25 @@
       <change beforePath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/menus/repository/MenuRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/menus/repository/MenuRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/users/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/users/repository/UserRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/exception/ApiResponseCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/exception/ApiResponseCode.java" afterDir="false" />
+=======
+    <list default="true" id="cd215a1f-9977-434b-b3a9-a56a96aef594" name="변경" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/25__6__25___2_14__________.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/25__6__25___4_25__________.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/25__6__25__오후_2_14,_체크아웃_전에_커밋되지_않은_변경_내용_[변경]/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/25__6__25__오후_2_14,_체크아웃_전에_커밋되지_않은_변경_내용_[변경]1/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/25__6__25__오후_4_25,_체크아웃_전에_커밋되지_않은_변경_내용_[변경]/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/25__6__25__오후_4_25,_체크아웃_전에_커밋되지_않은_변경_내용_[변경]1/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/DTO/responseDTO/MenuResponseDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/menus/controller/MenuController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/menus/repository/MenuRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/menus/service/MenuService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/config/OpenAPIConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/config/OpenAPIConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/config/RedisConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/config/RedisConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/users/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/users/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/exception/ApiResponseCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/exception/ApiResponseCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jbeatda/src/main/resources/application-prod.yml" beforeDir="false" afterPath="$PROJECT_DIR$/jbeatda/src/main/resources/application-prod.yml" afterDir="false" />
+>>>>>>> main
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,7 +73,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="be/feat/menu-list" />
+        <entry key="$PROJECT_DIR$" value="be/feat/docker-test" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -76,7 +96,11 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
+<<<<<<< be/feat/stamp-api
     "git-widget-placeholder": "be/feat/stamp-api"
+=======
+    "git-widget-placeholder": "be/feat/get-stores-by-area 병합 중"
+>>>>>>> main
   }
 }]]></component>
   <component name="RecentsManager">

@@ -24,3 +24,24 @@ spring:
   jwt:
     secret: 4RmV3wg4xmRFE37nrGmQCbXGPSNGgblHdRWTMro9ZHU=
 
+# 도지정향토음식점 정보
+do-store:
+  api:
+    base-url: https://apis.data.go.kr/6450000/DoRestaurantService
+    endpoints:
+      get-stores-list: getDoRestaurant          # 도지정향토음식점목록 조회
+      get-stores-Detail: getDoRestaurantDetail  # 도지정향토음식점상세보기 조회
+    service-key: ${DORESTAURANT_SERVICE_KEY}
+
+#향토음식점서비스
+jb-store:
+  api:
+    base-url: https://apis.data.go.kr/6450000/JeonbukRestaurantService
+    endpoints:
+      get-stores-list: getJeonbukRestaurant        # 전북향토음식점상세보기 조회
+      get-stores-Detail: getJeonbukRestaurantDetail # 전북향토음식점상세보기 조회
+    service-key: ${DORESTAURANT_SERVICE_KEY}
+
+kakao:
+  api:
+    rest-key: ${KAKAO_MAPS_KEY}

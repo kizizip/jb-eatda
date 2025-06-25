@@ -27,7 +27,9 @@ public class OpenAPIConfig {
                         new Server().url("http://172.30.1.42:8080/api").description("투썸"),
                         new Server().url("http://192.168.35.99:8080/api").description("서현 Server"),
                         new Server().url("https://jbeatda-branch.up.railway.app/api").description("branch Server"),
-                        new Server().url("https://jbeatda.up.railway.app/api").description("Github main Server")
+                        new Server().url("https://jbeatda.up.railway.app/api").description("Github main Server"),
+                        new Server().url("http://192.168.35.99:8080/api").description("서현 Server"),
+                        new Server().url("http://192.168.0.88:8080/api").description("문경집 Server")
                 ))
                 .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
                 .components(new io.swagger.v3.oas.models.Components()
