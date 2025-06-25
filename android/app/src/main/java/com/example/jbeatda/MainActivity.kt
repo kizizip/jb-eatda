@@ -13,6 +13,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.jbeatda.base.BaseActivity
 import com.example.jbeatda.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
