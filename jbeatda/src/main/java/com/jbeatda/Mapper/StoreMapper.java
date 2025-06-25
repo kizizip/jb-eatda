@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+/**
+ *  도지정향토음식점- 목록 api 에서 받아온 응답을 dto로 변환
+ */
 public class StoreMapper {
 
     public StoreListResponseDTO toStoreListResponse(String area, List<DoStoreListApiResponseDTO.StoreItem> apiItems) {
