@@ -38,6 +38,8 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
+    implementation("io.github.cdimascio:dotenv-java:3.0.0") // .env 인식
+    //implementation("org.apache.httpcomponents.client5:httpclient5:5.2.1") // Apache HttpComponents
 }
 
 tasks.test {

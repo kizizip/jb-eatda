@@ -5,11 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="34dff17b-7f47-48ac-abc4-07301115de8f" name="변경" comment="">
-      <change afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/areas/controller/AreaController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/areas/repository/AreaRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/areas/service/AreaService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jbeatda/.env" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/DTO/external/DoStoreListApiResponseDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/DTO/requestDTO/PageRequestDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/DTO/responseDTO/StoreListResponseDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/Mapper/StoreMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/config/EnvConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/config/RestTemplateConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/stores/client/DoStoreApiClient.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/exception/ExternalApiException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/properties/DoStoreListProperties.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jbeatda/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/jbeatda/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jbeatda/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/jbeatda/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/config/OpenAPIConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/config/OpenAPIConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/stores/controller/StoreController.java" beforeDir="false" afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/stores/controller/StoreController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/stores/service/StoreService.java" beforeDir="false" afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/stores/service/StoreService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/exception/ApiResponseCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/exception/ApiResponseCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/exception/HttpStatusCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/exception/HttpStatusCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jbeatda/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/jbeatda/src/main/resources/application-dev.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,20 +77,40 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Gradle.jbeatda [:com.jbeatda.JbeatdaApplication.main()].executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;be/feat/area-list&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Gradle.jbeatda [:com.jbeatda.JbeatdaApplication.main()].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "be/feat/get-stores-by-area"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/jbeatda" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="JbeatdaApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.jbeatda.JbeatdaApplication" />
+      <module name="jbeatda.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.jbeatda.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="애플리케이션.JbeatdaApplication" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="디폴트 작업">
