@@ -5,12 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="34dff17b-7f47-48ac-abc4-07301115de8f" name="변경" comment="">
-      <change afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/DTO/responseDTO/MenuResponseDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/menus/controller/MenuController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/menus/repository/MenuRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/menus/service/MenuService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/exception/ApiResponseCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/exception/ApiResponseCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/config/OpenAPIConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/config/OpenAPIConfig.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,7 +46,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="be/feat/docker-test" />
+        <entry key="$PROJECT_DIR$" value="be/feat/menu-list" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -70,7 +66,7 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "be/feat/menu-list"
+    "git-widget-placeholder": "be/fix/swagger-server-add"
   }
 }]]></component>
   <component name="RecentsManager">
