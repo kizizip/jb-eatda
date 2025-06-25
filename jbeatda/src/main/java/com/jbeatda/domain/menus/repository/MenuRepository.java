@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface MenuRepository extends JpaRepository<Menu, Integer> {
     List<Menu> findAllByAreaId(Integer areaId);
+    Menu findFirstById(Integer id);
 }
