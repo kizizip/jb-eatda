@@ -7,10 +7,7 @@ import com.jbeatda.DTO.internal.AiCourseRequestDTO;
 import com.jbeatda.DTO.internal.StoreWithCoordinatesDTO;
 import com.jbeatda.DTO.requestDTO.CourseSelectionRequestDTO;
 import com.jbeatda.DTO.requestDTO.CreateCourseRequestDTO;
-import com.jbeatda.DTO.responseDTO.AiCourseResponseDTO;
-import com.jbeatda.DTO.responseDTO.CourseListResponseDTO;
-import com.jbeatda.DTO.responseDTO.CreateCourseResponseDTO;
-import com.jbeatda.DTO.responseDTO.StoreResponseDTO;
+import com.jbeatda.DTO.responseDTO.*;
 import com.jbeatda.domain.courses.entity.Course;
 import com.jbeatda.domain.courses.entity.CourseStore;
 import com.jbeatda.domain.courses.repository.CourseRepository;
@@ -209,6 +206,22 @@ public class CourseService {
         // 4. CourseListResponseDTO 생성
         CourseListResponseDTO response = new CourseListResponseDTO();
         response.setCourses(myCourses);
+
+        return response;
+
+    }
+
+
+    public ApiResult getCourseDetail(int userId, int courseId){
+        // 1. 유저 확인
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("유저를 찾을 수 없습니다."));
+
+        // 2. 코스 확인
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new EntityNotFoundException("코스를 찾을 수 없습니다."));
+
+        CourseDetailResponseDTO response = course.toCourseDetailDTO(course);
 
         return response;
 
