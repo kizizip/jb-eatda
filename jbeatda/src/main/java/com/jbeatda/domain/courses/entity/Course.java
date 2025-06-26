@@ -1,6 +1,7 @@
 package com.jbeatda.domain.courses.entity;
 
 import com.jbeatda.DTO.requestDTO.CreateCourseRequestDTO;
+import com.jbeatda.DTO.responseDTO.CourseDetailResponseDTO;
 import com.jbeatda.DTO.responseDTO.CourseListResponseDTO;
 import com.jbeatda.domain.users.entity.User;
 import jakarta.persistence.*;
@@ -79,6 +80,35 @@ public class Course {
                 .position(new ArrayList<>(positions))
                 .build();
 
+    }
+
+    /**
+     * 코스 상세 보기 반환
+     */
+
+    public static CourseDetailResponseDTO toCourseDetailDTO(Course course){
+       List<CourseDetailResponseDTO.storeList> stores = new ArrayList<>();
+
+       for(CourseStore courseStore: course.getCourseStores()){
+           CourseDetailResponseDTO.storeList store = CourseDetailResponseDTO.storeList.builder()
+                   . storeId(courseStore.getStore().getId())
+                   .storeName(courseStore.getStore().getStoreName())
+                   .address(courseStore.getStore().getAddress())
+                   .smenu(courseStore.getStore().getSmenu())
+                   .visitOrder(courseStore.getVisitOrder())
+                   .lat(courseStore.getStore().getLat())
+                   .lng(courseStore.getStore().getLng())
+                   .build();
+           stores.add(store);
+       }
+
+       return CourseDetailResponseDTO.builder()
+               .courseId(course.getId())
+               .courseName(course.getCourseName())
+               .description(course.getDescription())
+               .storeCount(course.getCourseStores().size())
+               .stores(stores)
+               .build();
     }
 
 
