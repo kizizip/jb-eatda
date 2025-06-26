@@ -23,12 +23,10 @@ public class AiCourseResponseDTO implements ApiResult {
         private String address;
         private String smenu;
         private String time;
-        private String holiday;
         private String tel;
-        private Boolean parking;
-        private String seats;
+        private String sno;
         private Integer visitOrder;
-        private Double lat;   // 위도
-        private Double lng;   // 경도
+        private String lat;   // 위도
+        private String lng;   // 경도
     }
 }

@@ -1,5 +1,6 @@
 package com.jbeatda.domain.courses.controller;
 
+import com.jbeatda.DTO.requestDTO.CreateCourseRequestDTO;
 import com.jbeatda.DTO.requestDTO.CourseSelectionRequestDTO;
 import com.jbeatda.Mapper.AuthUtils;
 import com.jbeatda.domain.courses.service.CourseService;
@@ -31,7 +32,6 @@ public class CourseController {
     private final CourseService courseService;
 
 
-
     @Operation(summary = "AI 코스 추천", description = "AI 코스를 추천 받습니다")
     @PostMapping("/recommend")
     @ApiResponses(value = {
@@ -57,6 +57,43 @@ public class CourseController {
         log.info("userId: {}", userId);
 
         ApiResult result = courseService.recommendCourse(courseSelectionRequestDTO);
+
+        // 응답 결과가 에러인 경우 처리 (ApiResponseDTO 타입으로 캐스팅 가능한 경우)
+        if (result instanceof ApiResponseDTO<?> errorResult) {
+            String code = errorResult.getCode(); //에러 코드 추출
+            HttpStatus status = ApiResponseCode.fromCode(code).getHttpStatus(); //코드에 맞는 http 상태 가져오기
+            //에러 응답 반환
+            return ResponseEntity.status(status).body(errorResult);
+        }
+
+        return ResponseEntity.ok(result);
+    }
+
+    @Operation(summary = "코스 생성 및 저장", description = " 추천받은 코스를 저장합니다.")
+    @PostMapping
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            examples = @ExampleObject(
+                                    value = "{\" courseId\": 1 }"
+                            )
+                    )
+            )
+    })
+    public ResponseEntity<?> createCourse(
+            @AuthenticationPrincipal UserDetails userDetails, // Spring Security에서 현재 인증된 사용자 정보 주입
+            @RequestBody CreateCourseRequestDTO createCourseRequestDTO
+
+    ) {
+        Integer userId = userDetails != null ?
+                authUtils.getUserIdFromUserDetails(userDetails) :
+                authUtils.getCurrentUserId();
+
+        log.info("userId: {}", userId);
+
+        ApiResult result = courseService.createCourse(userId, createCourseRequestDTO);
 
         // 응답 결과가 에러인 경우 처리 (ApiResponseDTO 타입으로 캐스팅 가능한 경우)
         if (result instanceof ApiResponseDTO<?> errorResult) {

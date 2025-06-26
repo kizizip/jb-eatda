@@ -1,5 +1,6 @@
 package com.jbeatda.domain.courses.entity;
 
+import com.jbeatda.DTO.requestDTO.CreateCourseRequestDTO;
 import com.jbeatda.domain.users.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -42,4 +43,19 @@ public class Course {
     @OrderBy("visitOrder ASC")
     @Builder.Default
     private List<CourseStore> courseStores = new ArrayList<>();
+
+    public static Course fromBaseUser(User user, CreateCourseRequestDTO requestDTO) {
+
+        return Course.builder()
+                .courseName(requestDTO.getCourseName())
+                .description(requestDTO.getDescription())
+                .user(user)
+                .build();
+    }
+
+
+
+
 }
+
+

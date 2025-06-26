@@ -1,19 +1,34 @@
 package com.jbeatda.domain.courses.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jbeatda.DTO.external.JbStoreDetailApiResponseDTO;
 import com.jbeatda.DTO.external.JbStoreListApiResponseDTO;
 import com.jbeatda.DTO.internal.AiCourseRequestDTO;
 import com.jbeatda.DTO.internal.StoreWithCoordinatesDTO;
 import com.jbeatda.DTO.requestDTO.CourseSelectionRequestDTO;
+import com.jbeatda.DTO.requestDTO.CreateCourseRequestDTO;
 import com.jbeatda.DTO.responseDTO.AiCourseResponseDTO;
+import com.jbeatda.DTO.responseDTO.CreateCourseResponseDTO;
+import com.jbeatda.DTO.responseDTO.StoreResponseDTO;
+import com.jbeatda.domain.courses.entity.Course;
+import com.jbeatda.domain.courses.entity.CourseStore;
+import com.jbeatda.domain.courses.repository.CourseRepository;
+import com.jbeatda.domain.courses.repository.CourseStoreRepository;
 import com.jbeatda.domain.stores.client.JbStoreApiClient;
 import com.jbeatda.domain.stores.client.KakaoClient;
+import com.jbeatda.domain.stores.entity.Store;
+import com.jbeatda.domain.stores.repository.StoreRepository;
+import com.jbeatda.domain.users.entity.User;
+import com.jbeatda.domain.users.repository.UserRepository;
 import com.jbeatda.exception.AiException;
 import com.jbeatda.exception.ApiResponseCode;
 import com.jbeatda.exception.ApiResult;
 import com.jbeatda.exception.ExternalApiException;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import com.jbeatda.domain.courses.client.OpenAiClient;
 
@@ -29,13 +44,17 @@ public class CourseService {
     private final KakaoClient kakaoClient;
     private final OpenAiClient openAiClient;
     private final ObjectMapper objectMapper;
+    private final UserRepository userRepository;
+    private final CourseRepository courseRepository;
+    private final StoreRepository storeRepository;
+    private final CourseStoreRepository courseStoreRepository;
 
-    public ApiResult recommendCourse(CourseSelectionRequestDTO requestDTO){
+    public ApiResult recommendCourse(CourseSelectionRequestDTO requestDTO) {
 
         // 1. 지역 기준으로 식당 조회 (전북향토음식점목록조회 api)
         List<JbStoreListApiResponseDTO.StoreItem> storeList = new ArrayList<>();
 
-        for(String area: requestDTO.getRegions()){
+        for (String area : requestDTO.getRegions()) {
             List<JbStoreListApiResponseDTO.StoreItem> apiItems = jbStoreApiClient.jbStoreAreaList(area);
             storeList.addAll(apiItems); //
         }
@@ -43,7 +62,7 @@ public class CourseService {
         // 2. 식당 별로 위도 경도 추가하기
         List<StoreWithCoordinatesDTO> storesWithCoordinates = new ArrayList<>();
 
-        for(JbStoreListApiResponseDTO.StoreItem storeItem : storeList) {
+        for (JbStoreListApiResponseDTO.StoreItem storeItem : storeList) {
             try {
                 // 2-1. 카카오 API로 주소 → 좌표 변환
                 List<String> coordinates = kakaoClient.getPoint(storeItem.getAddress());
@@ -89,7 +108,7 @@ public class CourseService {
 
 
         // 5. AI 응답을 JSON으로 파싱하여 DTO 변환 AiCourseResponseDTO
-        try{
+        try {
             AiCourseResponseDTO courseResponse = objectMapper.readValue(aiRecommendation, AiCourseResponseDTO.class);
             log.info("AI 응답 파싱 완료 - 코스명: {}, 매장 수: {}",
                     courseResponse.getCourseName(), courseResponse.getStoreCount());
@@ -108,5 +127,64 @@ public class CourseService {
             // 기타 예외는 ExternalApiException으로 처리
             throw new ExternalApiException("코스 추천 중 오류가 발생했습니다.");
         }
+    }
+
+    @Transactional
+    //코스 생성 및 저장
+    public ApiResult createCourse(int userId, CreateCourseRequestDTO requestDTO) {
+
+        // 1. 유저 확인
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("유저를 찾을 수 없습니다."));
+
+        // 2. Course 엔티티 생성 및 저장
+        Course course = Course.fromBaseUser(user, requestDTO);
+        Course savedCourse = courseRepository.save(course);
+
+        // 3. 각 Store 정보 처리 및 CourseStore 생성
+        List<CourseStore> courseStores = new ArrayList<>();
+        for (CreateCourseRequestDTO.StoreDTO storeDTO : requestDTO.getStores()) {
+
+            // 3-1. Store 존재 여부 확인
+            Store store = storeRepository.findBySno(storeDTO.getSno())
+                    .orElseGet(() -> {
+                        // 3-2. Store가 없으면 공공 API 호출해서 상세 정보 가져오기
+                        log.info("Store 정보가 없어서 공공 API 호출 - sno: {}", storeDTO.getSno());
+
+                        JbStoreDetailApiResponseDTO.StoreDetail storeDetail =
+                                jbStoreApiClient.jbStoreDetail(storeDTO.getSno());
+
+                        if (storeDetail == null) {
+                            log.warn("공공 API에서 매장 정보를 찾을 수 없음 - sno: {}", storeDTO.getSno());
+                            throw new EntityNotFoundException("매장 정보를 찾을 수 없습니다. SNO: " + storeDTO.getSno());
+                        }
+
+                        // 3-3. 클라이언트 제공 좌표 사용
+                        List<String> coordinates = List.of(storeDTO.getLat(), storeDTO.getLng());
+                        log.info("클라이언트 제공 좌표 사용 - coordinates: {}", coordinates);
+
+                        // 3-4. StoreDetail을 Store 엔티티로 직접 변환 및 저장
+                        Store newStore = Store.fromStoreDetail(storeDetail, coordinates);
+                        return storeRepository.save(newStore);
+                    });
+
+            // 3-5. CourseStore 생성 (팩토리 메서드 사용)
+            CourseStore courseStore = CourseStore.fromBase(
+                    savedCourse,
+                    store,
+                    storeDTO.getVisitOrder()
+            );
+
+            courseStores.add(courseStore);
+        }
+
+        // 4. CourseStore 일괄 저장
+        courseStoreRepository.saveAll(courseStores);
+
+        // 5. Course에 CourseStore 리스트 설정 (양방향 관계 동기화)
+        savedCourse.setCourseStores(courseStores);
+
+        // 6. 성공 응답 반환
+        return CreateCourseResponseDTO.createDTO(savedCourse.getId());
     }
 }

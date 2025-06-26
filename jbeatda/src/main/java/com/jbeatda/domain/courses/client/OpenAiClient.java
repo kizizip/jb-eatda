@@ -101,47 +101,40 @@ public class OpenAiClient {
     private String buildCourseRecommendationPrompt(AiCourseRequestDTO requestDTO) {
         StringBuilder prompt = new StringBuilder();
 
-        prompt.append("전북 맛집 코스 추천. 조건:\n");
+        prompt.append("전북 맛집 코스 추천\n");
+        prompt.append("조건: ").append(String.join(",", requestDTO.getFoodStyles()));
+        prompt.append(" | ").append(requestDTO.getTransportation());
+        prompt.append(" | ").append(requestDTO.getDuration()).append("\n\n");
 
-        // 사용자 요구사항 (간단히)
-        prompt.append("음식: ").append(String.join(",", requestDTO.getFoodStyles()));
-        prompt.append(" | 이동: ").append(requestDTO.getTransportation());
-        prompt.append(" | 시간: ").append(requestDTO.getDuration()).append("\n\n");
-
-        // 매장 정보 (핵심만)
+        // 매장 정보 (간단하게)
         prompt.append("매장목록:\n");
         for (int i = 0; i < requestDTO.getStores().size(); i++) {
             StoreWithCoordinatesDTO store = requestDTO.getStores().get(i);
-            prompt.append(String.format("%d.%s(%s) - %s [%s,%s]\n",
-                    i + 1, store.getStoreName(), store.getMenu(),
-                    store.getAddress(), store.getLatitude(), store.getLongitude()));
+            prompt.append(String.format("%d.%s|%s|%s|%s|%s|%s|%s|%s|%s,%s\n",
+                    i + 1,
+                    store.getStoreName(),
+                    store.getSno(),
+                    store.getStoreImage(),
+                    store.getArea(),
+                    store.getAddress(),
+                    store.getMenu(),
+                    store.getTime(),
+                    store.getTel(),
+                    store.getLatitude(),
+                    store.getLongitude()));
         }
 
-        // 요청사항
-        prompt.append("\n3-5개 매장 선별, 효율적 동선 고려\n");
+        // 요청사항 (간단하게)
+        prompt.append("\n**중요:** 위 매장 정보를 정확히 복사 사용. 수정금지. 3-5개 선택, 효율적 동선 고려\n\n");
 
-        // 응답 형식 (압축)
-        prompt.append("JSON 형식:\n");
-        prompt.append("{\n");
-        prompt.append("\"courseName\":\"코스명\",\n");
-        prompt.append("\"description\":\"설명\",\n");
-        prompt.append("\"storeCount\":3,\n");
-        prompt.append("\"stores\":[{\n");
-        prompt.append("\"storeName\":\"매장명\",\n");
-        prompt.append("\"storeImage\":null,\n");
-        prompt.append("\"area\":\"지역\",\n");
-        prompt.append("\"address\":\"주소\",\n");
-        prompt.append("\"smenu\":\"메뉴\",\n");
-        prompt.append("\"time\":\"시간\",\n");
-        prompt.append("\"holiday\":\"휴무\",\n");
-        prompt.append("\"tel\":\"전화\",\n");
-        prompt.append("\"parking\":true,\n");
-        prompt.append("\"seats\":\"좌석\",\n");
-        prompt.append("\"visitOrder\":1,\n");
-        prompt.append("\"lat\":36.096793,\n");
-        prompt.append("\"lng\":128.419445\n");
-        prompt.append("}]}\n");
-        prompt.append("제공된 매장정보 그대로 사용, visitOrder만 방문순서로 변경");
+        // JSON 형식 (간단하게)
+        prompt.append("JSON응답:\n");
+        prompt.append("{\"courseName\":\"코스명\",\"description\":\"설명\",\"storeCount\":3,\"stores\":[{");
+        prompt.append("\"storeName\":\"정확한매장명\",\"sno\":\"정확한SNO\",\"storeImage\":\"정확한이미지URL\",");
+        prompt.append("\"area\":\"정확한지역\",\"address\":\"정확한주소\",\"smenu\":\"정확한메뉴\",");
+        prompt.append("\"time\":\"정확한시간\",\"tel\":\"정확한전화\",\"visitOrder\":1,");
+        prompt.append("\"lat\":\"정확한위도\",\"lng\":\"정확한경도\"}]}\n");
+        prompt.append("위 매장정보 그대로 복사, visitOrder만 순서 변경");
 
         return prompt.toString();
     }
