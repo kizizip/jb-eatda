@@ -8,6 +8,7 @@ import com.jbeatda.DTO.internal.StoreWithCoordinatesDTO;
 import com.jbeatda.DTO.requestDTO.CourseSelectionRequestDTO;
 import com.jbeatda.DTO.requestDTO.CreateCourseRequestDTO;
 import com.jbeatda.DTO.responseDTO.AiCourseResponseDTO;
+import com.jbeatda.DTO.responseDTO.CourseListResponseDTO;
 import com.jbeatda.DTO.responseDTO.CreateCourseResponseDTO;
 import com.jbeatda.DTO.responseDTO.StoreResponseDTO;
 import com.jbeatda.domain.courses.entity.Course;
@@ -34,6 +35,7 @@ import com.jbeatda.domain.courses.client.OpenAiClient;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -186,5 +188,29 @@ public class CourseService {
 
         // 6. 성공 응답 반환
         return CreateCourseResponseDTO.createDTO(savedCourse.getId());
+    }
+
+
+    public ApiResult getCourseList(int userId){
+
+        // 1. 유저 확인
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("유저를 찾을 수 없습니다."));
+
+        // 2. 해당 유저의 코스 가져오기
+        List<Course> courseList =  courseRepository.findByUserIdWithStores(user.getId());
+
+        // 3. 유저의 코스와 관련된 식당들의 도시 이름 담기 set
+        List<CourseListResponseDTO.MyCourse> myCourses = new ArrayList<>();
+        for(Course course: courseList){
+            myCourses.add(Course.toMyCourseDTO(course));
+        }
+
+        // 4. CourseListResponseDTO 생성
+        CourseListResponseDTO response = new CourseListResponseDTO();
+        response.setCourses(myCourses);
+
+        return response;
+
     }
 }
