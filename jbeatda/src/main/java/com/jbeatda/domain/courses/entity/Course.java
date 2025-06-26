@@ -1,6 +1,7 @@
 package com.jbeatda.domain.courses.entity;
 
 import com.jbeatda.DTO.requestDTO.CreateCourseRequestDTO;
+import com.jbeatda.DTO.responseDTO.CourseListResponseDTO;
 import com.jbeatda.domain.users.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,7 +9,9 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "course")
@@ -44,6 +47,9 @@ public class Course {
     @Builder.Default
     private List<CourseStore> courseStores = new ArrayList<>();
 
+    /**
+     * ai로 부터 받아온 코스를 DTO로 변환
+     */
     public static Course fromBaseUser(User user, CreateCourseRequestDTO requestDTO) {
 
         return Course.builder()
@@ -51,6 +57,28 @@ public class Course {
                 .description(requestDTO.getDescription())
                 .user(user)
                 .build();
+    }
+
+    /**
+     * 코스 리스트 반환
+     */
+    public static CourseListResponseDTO.MyCourse toMyCourseDTO(Course course){
+        Set<String> positions = new HashSet<>();
+
+        for(CourseStore courseStore: course.getCourseStores()){
+            String area = courseStore.getStore().getArea();
+            if (area != null && !area.trim().isEmpty()) {
+                positions.add(area);
+            }
+        }
+
+        return CourseListResponseDTO.MyCourse.builder()
+                .courseId(course.getId())
+                .courseName(course.getCourseName())
+                .description(course.getDescription())
+                .position(new ArrayList<>(positions))
+                .build();
+
     }
 
 
