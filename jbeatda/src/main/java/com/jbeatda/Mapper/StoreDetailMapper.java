@@ -35,10 +35,11 @@ public class StoreDetailMapper {
                 .address(storeDetail.getAddress())
                 .smenu(parseJbMenu(storeDetail.getFood(), storeDetail.getSmenu()))
                 .time(storeDetail.getTime())
-                .holiday(storeDetail.getHolyday())
+                .holyday(storeDetail.getHolyday())
                 .tel(storeDetail.getTel())
                 .sno(storeDetail.getSno())
                 .park(convertParkFlag(storeDetail.getPark()))
+                .seat(Integer.parseInt(storeDetail.getSeat()))
                 .lat(extractLatitude(coordinates))
                 .lng(extractLongitude(coordinates))
                 .build();

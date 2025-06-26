@@ -2,8 +2,10 @@ package com.jbeatda.DTO.external;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 전북향토음식점 정보 - 상세정보 조회 응답 결과
@@ -28,10 +30,11 @@ public class JbStoreDetailApiResponseDTO {
         @JsonProperty("item")
         private StoreDetail item;
     }
-
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class StoreDetail {
         @JsonProperty("SNO")
         private String sno;

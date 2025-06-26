@@ -1,5 +1,6 @@
 package com.jbeatda.domain.courses.entity;
 
+import com.jbeatda.DTO.requestDTO.CreateCourseRequestDTO;
 import com.jbeatda.domain.stores.entity.Store;
 import jakarta.persistence.*;
 import lombok.*;
@@ -36,4 +37,14 @@ public class CourseStore {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = false)
     private Store store;
+
+
+    public static CourseStore fromBase(Course course, Store store, Integer visitOrder) {
+        return CourseStore.builder()
+                .course(course)
+                .store(store)
+                .visitOrder(visitOrder)
+                .build();
+    }
+
 }

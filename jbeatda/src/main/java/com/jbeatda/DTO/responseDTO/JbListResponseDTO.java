@@ -29,10 +29,8 @@ public class JbListResponseDTO implements ApiResult {
         private String address;
         private String smenu;
         private String time;
-        private String holiday;
         private String tel;
         private String sno;
-        private Boolean park;
     }
 
     @Data

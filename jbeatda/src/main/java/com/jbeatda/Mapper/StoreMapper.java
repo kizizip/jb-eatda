@@ -51,10 +51,8 @@ public class StoreMapper {
                 .address(apiItem.getAddress())
                 .smenu(parseMenu(apiItem.getSmenu()))
                 .time(apiItem.getTime())
-                .holiday(generateJbDefaultHoliday())
                 .tel(apiItem.getTel())
                 .sno(apiItem.getSno())
-                .park(generateJbDefaultPark())
                 .build();
     }
 
