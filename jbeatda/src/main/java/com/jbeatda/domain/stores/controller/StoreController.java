@@ -69,7 +69,7 @@ public class StoreController {
     }
 
     @Operation(summary = "특정 식당 상세 정보 조회", description = "특정 지역의 상세 정보를 조회합니다.")
-    @GetMapping("/detail/{apiType}/{storeId}")
+    @GetMapping("/detail/{storeId}")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -83,8 +83,7 @@ public class StoreController {
     })
     public ResponseEntity<?> getStoresDetail(
             @AuthenticationPrincipal UserDetails userDetails, // Spring Security에서 현재 인증된 사용자 정보 주입
-            @PathVariable int storeId,
-            @PathVariable String apiType
+            @PathVariable int storeId
 
     ){
         Integer userId = userDetails != null ?
@@ -93,7 +92,7 @@ public class StoreController {
 
         log.info("userId: {}", userId);
 
-        ApiResult result = storeService.getStoresDetail(storeId, apiType);
+        ApiResult result = storeService.getStoresDetail(storeId);
 
         // 응답 결과가 에러인 경우 처리 (ApiResponseDTO 타입으로 캐스팅 가능한 경우)
         if (result instanceof ApiResponseDTO<?> errorResult) {

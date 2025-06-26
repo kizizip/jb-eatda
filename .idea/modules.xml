@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/jbeatda-API.iml" filepath="$PROJECT_DIR$/.idea/jbeatda-API.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jbeatda.iml" filepath="$PROJECT_DIR$/.idea/modules/jbeatda.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/jbeatda.main.iml" filepath="$PROJECT_DIR$/.idea/modules/jbeatda.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jbeatda.test.iml" filepath="$PROJECT_DIR$/.idea/modules/jbeatda.test.iml" />
     </modules>
   </component>
 </project>
