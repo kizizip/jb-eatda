@@ -42,6 +42,12 @@ jb-store:
       get-stores-Detail: getJeonbukRestaurantDetail # 전북향토음식점상세보기 조회
     service-key: ${DORESTAURANT_SERVICE_KEY}
 
+# 카카오
 kakao:
   api:
     rest-key: ${KAKAO_MAPS_KEY}
+
+#open-ai
+openai:
+  api:
+    key: ${OPENAI_API_KEY}

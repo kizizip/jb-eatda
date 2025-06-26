@@ -7,7 +7,6 @@ import com.jbeatda.DTO.responseDTO.JbListResponseDTO;
 import com.jbeatda.DTO.responseDTO.StoreResponseDTO;
 import com.jbeatda.Mapper.StoreDetailMapper;
 import com.jbeatda.Mapper.StoreMapper;
-import com.jbeatda.domain.stores.client.DoStoreApiClient;
 import com.jbeatda.domain.stores.client.JbStoreApiClient;
 import com.jbeatda.domain.stores.client.KakaoClient;
 import com.jbeatda.domain.stores.entity.Store;
@@ -25,7 +24,6 @@ import java.util.List;
 public class StoreService {
 
     private final StoreRepository storeRepository;
-    private final DoStoreApiClient doStoreApiClient;
     private final StoreMapper storeMapper;
     private final KakaoClient kakaoClient;
     private final StoreDetailMapper storeDetailMapper;
@@ -72,6 +70,7 @@ public class StoreService {
     // 식당 정보 상세 조회
     public ApiResult getStoresDetail(int storeId) {
         String store = String.valueOf(storeId);
+
         // 1. JB API 호출
         JbStoreDetailApiResponseDTO.StoreDetail apiItem = jbStoreApiClient.jbStoreDetail(store);
 

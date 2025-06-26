@@ -1,7 +1,6 @@
 package com.jbeatda.domain.stores.client;
 
 
-import com.jbeatda.DTO.external.DoStoreListApiResponseDTO;
 import com.jbeatda.DTO.external.JbStoreDetailApiResponseDTO;
 import com.jbeatda.DTO.external.JbStoreListApiResponseDTO;
 import com.jbeatda.DTO.requestDTO.SearchStoreRequestDTO;
