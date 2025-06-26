@@ -14,6 +14,7 @@ public enum HttpStatusCode {
     INTERNAL_SERVER_ERROR(500),
     SERVICE_UNAVAILABLE(503); // 외부 API 관련 코드
 
+
     private final int status;
 
     public HttpStatus toHttpStatus() {

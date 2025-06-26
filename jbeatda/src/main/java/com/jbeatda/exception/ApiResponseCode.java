@@ -25,8 +25,10 @@ public enum ApiResponseCode {
     EXTERNAL_API_ERROR("503-1", "외부 서비스에 일시적인 문제가 발생했습니다.", HttpStatus.SERVICE_UNAVAILABLE),
     API_AUTH_ERROR("503-2", "외부 서비스 인증에 실패했습니다.", HttpStatus.SERVICE_UNAVAILABLE),
     API_DATA_NOT_FOUND("503-3", "요청한 데이터를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
-    API_TIMEOUT_ERROR("503-4", "외부 서비스 응답 시간이 초과되었습니다.", HttpStatus.SERVICE_UNAVAILABLE);
+    API_TIMEOUT_ERROR("503-4", "외부 서비스 응답 시간이 초과되었습니다.", HttpStatus.SERVICE_UNAVAILABLE),
 
+    // AI 관련 에러 코드
+    AI_RESPONSE_PARSE_ERROR("503-5", "AI 응답 처리 중 오류가 발생했습니다.", HttpStatus.SERVICE_UNAVAILABLE);
 
     private final String code;
     private final String message;

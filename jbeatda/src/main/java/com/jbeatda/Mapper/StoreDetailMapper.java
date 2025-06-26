@@ -1,8 +1,7 @@
 package com.jbeatda.Mapper;
 
-import com.jbeatda.DTO.external.DoStoreDetailApiResponseDTO;
 import com.jbeatda.DTO.external.JbStoreDetailApiResponseDTO;
-import com.jbeatda.DTO.responseDTO.DoStoreDetailResponseDTO;
+import com.jbeatda.DTO.responseDTO.StoreDetailResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 도지정향토음식점, 전북향토음식점 - 상세 api 에서 받아온 응답을 dto로 변환
+ * 전북향토음식점 - 상세 api 에서 받아온 응답을 dto로 변환
  */
 @Service
 @Slf4j
@@ -18,44 +17,9 @@ import java.util.List;
 public class StoreDetailMapper {
 
     /**
-     * DoStore API 응답 + Kakao API 좌표를 최종 응답 DTO로 매핑
-     */
-    public DoStoreDetailResponseDTO toDoStoreDetailResponse(
-            DoStoreDetailApiResponseDTO.StoreDetail storeDetail,
-            List<String> coordinates) {
-
-        if (storeDetail == null) {
-            log.warn("StoreDetail이 null입니다.");
-            return null;
-        }
-
-        return DoStoreDetailResponseDTO.builder()
-                .storeName(storeDetail.getName())
-                .storeImage(storeDetail.getImg())
-                .area(storeDetail.getArea())
-                .address(storeDetail.getAddress())
-                .smenu(storeDetail.getFood())
-                .time(storeDetail.getTime())
-                .holiday(storeDetail.getHolyday())
-                .tel(storeDetail.getTel())
-                .sno(storeDetail.getSno())
-                .park(convertParkFlag(storeDetail.getPark()))
-                .lat(extractLatitude(coordinates))
-                .lng(extractLongitude(coordinates))
-                .build();
-    }
-
-    /**
-     * DoStore API 응답만으로 DTO 생성 (좌표 없이)
-     */
-    public DoStoreDetailResponseDTO toDoStoreDetailResponse(DoStoreDetailApiResponseDTO.StoreDetail storeDetail) {
-        return toDoStoreDetailResponse(storeDetail, null);
-    }
-
-    /**
      * JbStore API 응답 + Kakao API 좌표를 최종 응답 DTO로 매핑
      */
-    public DoStoreDetailResponseDTO toJbStoreDetailResponse(
+    public StoreDetailResponseDTO toJbStoreDetailResponse(
             JbStoreDetailApiResponseDTO.StoreDetail storeDetail,
             List<String> coordinates) {
 
@@ -64,7 +28,7 @@ public class StoreDetailMapper {
             return null;
         }
 
-        return DoStoreDetailResponseDTO.builder()
+        return StoreDetailResponseDTO.builder()
                 .storeName(storeDetail.getName())
                 .storeImage(buildJbImageUrl(storeDetail.getImg()))
                 .area(storeDetail.getArea())
@@ -83,11 +47,11 @@ public class StoreDetailMapper {
     /**
      * JbStore API 응답만으로 DTO 생성 (좌표 없이)
      */
-    public DoStoreDetailResponseDTO toJbStoreDetailResponse(JbStoreDetailApiResponseDTO.StoreDetail storeDetail) {
+    public StoreDetailResponseDTO toJbStoreDetailResponse(JbStoreDetailApiResponseDTO.StoreDetail storeDetail) {
         return toJbStoreDetailResponse(storeDetail, null);
     }
 
-    // 공통 유틸리티 메서드들
+    // 유틸리티 메서드들
     private boolean convertParkFlag(String parkFlag) {
         if (parkFlag == null || parkFlag.trim().isEmpty()) {
             return false;

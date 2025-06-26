@@ -84,7 +84,6 @@ public class JbStoreDetailApiResponseDTO {
         @JsonProperty("FOOD")
         private String food;
 
-        // 추가된 필드들 (XML에 있지만 기존 DTO에 없던 것들)
         @JsonProperty("TB_STARCOUNT")
         private Integer tbStarcount;
 
