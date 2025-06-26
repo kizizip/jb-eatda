@@ -1,3 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <style name="login_title">
+        <item name="android:fontFamily">@font/pretendard_extrabold</item>
+        <item name="android:textSize">86sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+<!--    제목 혹은 설문-->
+    <style name="title">
+        <item name="android:fontFamily">@font/pretendard_bold</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+<!--    제목 근처에 있는 부연설명-->
+    <style name="title_description">
+        <item name="android:fontFamily">@font/pretendard_regular</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/gray_text</item>
+    </style>
+
+<!--    큰 버튼 -->
+    <style name="button_text">
+        <item name="android:fontFamily">@font/pretendard_bold</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+
+
+    <!--    식당 목록 아이템-->
+    <style name="store_title">
+        <item name="android:fontFamily">@font/pretendard_extrabold</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="store_address">
+        <item name="android:fontFamily">@font/pretendard_semibold</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="store_menu_title">
+        <item name="android:fontFamily">@font/pretendard_bold</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/orange</item>
+    </style>
+
+    <style name="store_menu_content">
+        <item name="android:fontFamily">@font/pretendard_bold</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/gray_text</item>
+    </style>
+
+
+<!--    식당 상세정보 (영업시간, 휴일 등)-->
+    <style name="store_detail_title">
+        <item name="android:fontFamily">@font/pretendard_semibold</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="store_detail_content">
+        <item name="android:fontFamily">@font/pretendard_regular</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+
+
+
+<!--    이하는 다양한 굵기/크기 조합-->
+
+
+    <style name="extrabold28">
+        <item name="android:fontFamily">@font/pretendard_extrabold</item>
+        <item name="android:textSize">28sp</item>
+    </style>
+
+    <style name="extrabold20">
+        <item name="android:fontFamily">@font/pretendard_extrabold</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="extrabold16">
+        <item name="android:fontFamily">@font/pretendard_extrabold</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="bold16">
+        <item name="android:fontFamily">@font/pretendard_bold</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="bold12">
+        <item name="android:fontFamily">@font/pretendard_bold</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="semibold20">
+        <item name="android:fontFamily">@font/pretendard_semibold</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="semibold16">
+        <item name="android:fontFamily">@font/pretendard_semibold</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="medium16">
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="medium14">
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="regular16">
+        <item name="android:fontFamily">@font/pretendard_regular</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="light16">
+        <item name="android:fontFamily">@font/pretendard_light</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
 </resources>

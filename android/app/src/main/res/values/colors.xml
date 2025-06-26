@@ -2,4 +2,19 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="orange">#FF8714</color>
+    <color name="orange_sub">#FFEBD7</color>
+    <color name="yellow_sub">#FFF19F</color>
+
+<!--    배경색이 되는 회색-->
+    <color name="gray_background">#F0F0F0</color>
+
+<!--    일반 회색 텍스트-->
+    <color name="gray_text">#A3A3A3</color>
+
+<!--    버튼에 들어가는 회색들-->
+    <color name="gray_button_background">#F2F2F2</color>
+    <color name="gray_button_text">#9C9C9C</color>
+
 </resources>
