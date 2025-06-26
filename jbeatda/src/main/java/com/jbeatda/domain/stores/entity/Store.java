@@ -64,22 +64,22 @@ public class Store {
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CourseStore> courseStores = new ArrayList<>();
 
-    public static Store fromBase(CreateCourseRequestDTO.StoreDTO storeDTO) {
-        return Store.builder()
-                .storeName(storeDTO.getStoreName())
-                .storeImage(storeDTO.getStoreImage())
-                .area(storeDTO.getArea())
-                .address(storeDTO.getAddress())
-                .smenu(storeDTO.getSmenu())
-                .time(storeDTO.getTime())
-                .holiday(storeDTO.getHoliday())
-                .sno(storeDTO.getSno())
-                .tel(storeDTO.getTel())
-                .park(storeDTO.getParking())
-                .lat(storeDTO.getLat())
-                .lng(storeDTO.getLng())
-                .build();
-    }
+//    public static Store fromBase(CreateCourseRequestDTO.StoreDTO storeDTO) {
+//        return Store.builder()
+//                .storeName(storeDTO.getStoreName())
+//                .storeImage(storeDTO.getStoreImage())
+//                .area(storeDTO.getArea())
+//                .address(storeDTO.getAddress())
+//                .smenu(storeDTO.getSmenu())
+//                .time(storeDTO.getTime())
+//                .holiday(storeDTO.getHoliday())
+//                .sno(storeDTO.getSno())
+//                .tel(storeDTO.getTel())
+//                .park(storeDTO.getParking())
+//                .lat(storeDTO.getLat())
+//                .lng(storeDTO.getLng())
+//                .build();
+//    }
 
 
     public static Store fromStoreDetail(JbStoreDetailApiResponseDTO.StoreDetail storeDetail, List<String> coordinates) {
