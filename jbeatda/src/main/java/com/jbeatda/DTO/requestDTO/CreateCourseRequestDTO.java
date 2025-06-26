@@ -64,17 +64,8 @@ public class CreateCourseRequestDTO {
         @JsonProperty("time")
         private String time;
 
-        @JsonProperty("holiday")
-        private String holiday;
-
         @JsonProperty("tel")
         private String tel;
-
-        @JsonProperty("parking")
-        private Boolean parking;
-
-        @JsonProperty("seats")
-        private String seats;
 
         @NotNull(message = "방문 순서는 필수입니다")
         @Min(value = 1, message = "방문 순서는 1 이상이어야 합니다")
