@@ -1,6 +1,7 @@
 package com.jbeatda.domain.stores.client;
 
 
+import com.jbeatda.DTO.external.DoStoreListApiResponseDTO;
 import com.jbeatda.DTO.external.JbStoreDetailApiResponseDTO;
 import com.jbeatda.DTO.external.JbStoreListApiResponseDTO;
 import com.jbeatda.DTO.requestDTO.SearchStoreRequestDTO;
@@ -54,26 +55,47 @@ public class JbStoreApiClient {
         this.restTemplate = restTemplate;
     }
 
-    // 전북향토음식점서비스 - 목록조회
-    public List<JbStoreListApiResponseDTO.StoreItem> jbStoreList(SearchStoreRequestDTO searchStoreRequestDTO) {
-        // SearchStoreRequestDTO를 Map으로 변환
+    /**
+     * 전북향토음식점서비스 - 지역별 목록조회
+     * @param area 지역명 (예: "01")
+     * @return 해당 지역의 매장 목록
+     */
+    public List<JbStoreListApiResponseDTO.StoreItem> jbStoreAreaList(String area) {
+        return callApiAndParseResponse(
+                listEndpoint,
+                Map.of("Area", area, "_type", "json"),
+                "전북향토음식점 지역별 목록 API",
+                this::parseStoreListXml
+        );
+    }
+
+    /**
+     * 전북향토음식점서비스 - 검색 키워드 목록조회
+     * @param searchStoreRequestDTO 검색 조건 (키워드, 지역)
+     * @return 검색 조건에 맞는 매장 목록
+     */
+    public List<JbStoreListApiResponseDTO.StoreItem> jbStoreSearchList(SearchStoreRequestDTO searchStoreRequestDTO) {
         Map<String, String> queryParams = convertToQueryParams(searchStoreRequestDTO);
 
         return callApiAndParseResponse(
                 listEndpoint,
                 queryParams,
-                "전북향토음식점 목록 API",
-                xmlResponse -> parseStoreListXml(xmlResponse)
+                "전북향토음식점 검색 목록 API",
+                this::parseStoreListXml
         );
     }
 
-    // 전북향토음식점서비스 - 상세조회
+    /**
+     * 전북향토음식점서비스 - 상세조회
+     * @param sno 매장 일련번호
+     * @return 매장 상세 정보
+     */
     public JbStoreDetailApiResponseDTO.StoreDetail jbStoreDetail(String sno) {
         List<JbStoreDetailApiResponseDTO.StoreDetail> results = callApiAndParseResponse(
                 detailEndpoint,
                 Map.of("SNO", sno, "_type", "json"),
                 "전북향토음식점 상세 API",
-                xmlResponse -> parseStoreDetailXml(xmlResponse)
+                this::parseStoreDetailXml
         );
 
         return results.isEmpty() ? null : results.get(0);
@@ -86,11 +108,11 @@ public class JbStoreApiClient {
         Map<String, String> params = new HashMap<>();
 
         // keyword와 area를 쿼리 파라미터로 추가
-        if (searchStoreRequestDTO.getKeyword() != null) {
-            params.put("keyword", searchStoreRequestDTO.getKeyword());
+        if (searchStoreRequestDTO.getKeyword() != null && !searchStoreRequestDTO.getKeyword().trim().isEmpty()) {
+            params.put("keyword", searchStoreRequestDTO.getKeyword().trim());
         }
-        if (searchStoreRequestDTO.getArea() != null) {
-            params.put("Area", searchStoreRequestDTO.getArea());
+        if (searchStoreRequestDTO.getArea() != null && !searchStoreRequestDTO.getArea().trim().isEmpty()) {
+            params.put("Area", searchStoreRequestDTO.getArea().trim());
         }
 
         // 응답 타입을 JSON으로 설정
@@ -118,7 +140,7 @@ public class JbStoreApiClient {
 
             // 3. 성공적으로 받아왔으면, body 부분 가져오기
             String xmlResponse = responseEntity.getBody();
-            log.info("XML 응답 받음");
+            log.info("XML 응답 받음 - 길이: {}", xmlResponse != null ? xmlResponse.length() : 0);
 
             // 4. XML 파싱
             T result = xmlParser.apply(xmlResponse);
@@ -182,7 +204,7 @@ public class JbStoreApiClient {
     }
 
     /**
-     * 매장 상세 XML 파싱 - 디테일에 쓰임
+     * 매장 상세 XML 파싱
      */
     private List<JbStoreDetailApiResponseDTO.StoreDetail> parseStoreDetailXml(String xmlResponse) {
         return parseXmlResponse(xmlResponse, "item", item ->
