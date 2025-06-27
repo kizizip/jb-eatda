@@ -25,6 +25,7 @@ public class CourseDetailResponseDTO implements ApiResult {
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class storeList {
         private int storeId;
+        private String sno;
         private String storeName;
         private String address;
         private String smenu;

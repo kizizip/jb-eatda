@@ -94,12 +94,19 @@ public class StoreDetailMapper {
 
     private String parseJbMenu(String food, String smenu) {
         // FOOD 필드를 우선 사용, 없으면 SMENU 사용
-        if (food != null && !food.trim().isEmpty()) {
-            return food.replace("^", ", ").replace("|", ", ");
+        String menuText = null;
+
+        if (food != null && !food.trim().isEmpty() && !"null".equals(food.trim())) {
+            menuText = food;
+        } else if (smenu != null && !smenu.trim().isEmpty() && !"null".equals(smenu.trim())) {
+            menuText = smenu;
         }
-        if (smenu != null && !smenu.trim().isEmpty()) {
-            return smenu.replace("^", ", ").replace("|", ", ");
+
+        // null 체크 및 변환 처리
+        if (menuText != null) {
+            return menuText.replace("^", ", ").replace("|", ", ");
         }
+
         return "메뉴 정보 없음";
     }
 }

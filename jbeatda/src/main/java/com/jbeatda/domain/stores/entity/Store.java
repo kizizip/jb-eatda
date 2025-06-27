@@ -2,9 +2,11 @@ package com.jbeatda.domain.stores.entity;
 
 import com.jbeatda.DTO.external.JbStoreDetailApiResponseDTO;
 import com.jbeatda.DTO.requestDTO.CreateCourseRequestDTO;
+import com.jbeatda.DTO.responseDTO.StoreDetailResponseDTO;
 import com.jbeatda.domain.courses.entity.CourseStore;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Slf4j
 public class Store {
 
     @Id
@@ -53,6 +56,9 @@ public class Store {
     @Column(name = "park")
     private Boolean park;
 
+    @Column(name = "seat")
+    private int seat;
+
     @Column(name = "lat")
     private String lat; // 위도
 
@@ -65,33 +71,35 @@ public class Store {
     private List<CourseStore> courseStores = new ArrayList<>();
 
 
-    public static Store fromStoreDetail(JbStoreDetailApiResponseDTO.StoreDetail storeDetail, List<String> coordinates) {
-        // 좌표 추출 (클라이언트 제공 좌표 우선 사용)
-        String latitude = (coordinates != null && coordinates.size() >= 2) ? coordinates.get(0) : storeDetail.getFLatitude();
-        String longitude = (coordinates != null && coordinates.size() >= 2) ? coordinates.get(1) : storeDetail.getFLongitude();
 
-        // 이미지 URL 생성
-        String imageUrl = buildImageUrl(storeDetail.getImg());
+    public static Store fromStoreDetail(JbStoreDetailApiResponseDTO.StoreDetail storeDetail, List<String> coordinates) {
+//        // 좌표 추출 (클라이언트 제공 좌표 우선 사용)
+//        String latitude = (coordinates != null && coordinates.size() >= 2) ? coordinates.get(0) : storeDetail.getFLatitude();
+//        String longitude = (coordinates != null && coordinates.size() >= 2) ? coordinates.get(1) : storeDetail.getFLongitude();
 
         // 주차 정보 변환 (Y/N → boolean)
         Boolean parkingAvailable = convertParkFlag(storeDetail.getPark());
 
-        // 메뉴 정보 정리 (FOOD 우선, 없으면 SMENU 사용)
-        String menu = parseMenu(storeDetail.getFood(), storeDetail.getSmenu());
+        // 메뉴 정보 처리 - ^ 를 , 로 변환
+//        log.info("메뉴 정보: {}", storeDetail.getSmenu());
+        String processedSmenu = storeDetail.getSmenu() != null
+                ? storeDetail.getSmenu().replace("^", ", ")
+                : null;
 
         return Store.builder()
                 .sno(storeDetail.getSno())
-                .storeName(storeDetail.getName())
-                .storeImage(imageUrl)
-                .area(storeDetail.getArea())
-                .address(storeDetail.getAddress())
-                .smenu(menu)
-                .time(storeDetail.getTime())
-                .holiday(storeDetail.getHolyday())
-                .tel(storeDetail.getTel())
-                .park(parkingAvailable)
-                .lat(latitude)
-                .lng(longitude)
+                .storeName(storeDetail.getName())         // API 데이터 사용
+                .storeImage(buildImageUrl(storeDetail.getImg())) // API 데이터 사용
+                .area(storeDetail.getArea())                   // API 데이터 사용
+                .address(storeDetail.getAddress())             // API 데이터 사용
+                .smenu(processedSmenu)                 // API 데이터 사용
+                .time(storeDetail.getTime())                   // API 데이터 사용
+                .holiday(storeDetail.getHolyday())             // API 데이터 사용
+                .tel(storeDetail.getTel())                     // API 데이터 사용
+                .park(parkingAvailable)                        // API 데이터 사용
+                .seat(Integer.parseInt(storeDetail.getSeat())) // API 데이터 사용
+                .lat(coordinates.get(0))                                 // 클라이언트 좌표 우선
+                .lng(coordinates.get(1))                           // 클라이언트 좌표 우선
                 .build();
     }
 
@@ -118,25 +126,27 @@ public class Store {
         return "y".equals(normalized) || "yes".equals(normalized);
     }
 
-    /**
-     * 메뉴 정보 파싱 헬퍼 메서드
-     */
-    private static String parseMenu(String food, String smenu) {
-        // FOOD 필드를 우선 사용, 없으면 SMENU 사용
-        String menu = null;
-        if (food != null && !food.trim().isEmpty()) {
-            menu = food;
-        } else if (smenu != null && !smenu.trim().isEmpty()) {
-            menu = smenu;
-        }
+    public static StoreDetailResponseDTO toStoreDetailResponseDTO (Store store){
 
-        if (menu != null) {
-            // ^나 | 등의 구분자를 콤마로 변경
-            menu = menu.replace("^", ", ").replace("|", ", ");
-        }
-
-        return menu;
+        return StoreDetailResponseDTO.builder()
+                .storeName(store.getStoreName())
+                .storeImage(store.getStoreImage())
+                .area(store.getArea())
+                .address(store.getAddress())
+                .smenu(store.getSmenu())
+                .time(store.getTime())
+                .holyday(store.getHoliday())
+                .tel(store.getTel())
+                .sno(store.getSno())
+                .park(store.getPark())
+                .seat(store.getSeat()) // Store 엔티티에서 seat 정보 파싱
+                .lat(store.getLat())
+                .lng(store.getLng())
+                .build();
     }
+
+
+
 }
 
 

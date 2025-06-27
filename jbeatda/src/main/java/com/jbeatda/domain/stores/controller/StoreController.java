@@ -112,7 +112,7 @@ public class StoreController {
 
 
     @Operation(summary = "특정 식당 상세 정보 조회", description = "특정 지역의 상세 정보를 조회합니다.")
-    @GetMapping("/detail/{storeId}")
+    @GetMapping("/detail/{sno}")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -126,7 +126,7 @@ public class StoreController {
     })
     public ResponseEntity<?> getStoresDetail(
             @AuthenticationPrincipal UserDetails userDetails, // Spring Security에서 현재 인증된 사용자 정보 주입
-            @PathVariable int storeId
+            @PathVariable int sno
 
     ){
         Integer userId = userDetails != null ?
@@ -135,7 +135,7 @@ public class StoreController {
 
         log.info("userId: {}", userId);
 
-        ApiResult result = storeService.getStoresDetail(storeId);
+        ApiResult result = storeService.getStoresDetail(sno);
 
         // 응답 결과가 에러인 경우 처리 (ApiResponseDTO 타입으로 캐스팅 가능한 경우)
         if (result instanceof ApiResponseDTO<?> errorResult) {
@@ -147,6 +147,46 @@ public class StoreController {
 
         return ResponseEntity.ok(result);
     }
+
+
+    @Operation(summary = "식당 즐겨찾기(북마크)", description = "해당 식당을 즐겨찾기에 등록합니다")
+    @PutMapping("/{sno}")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            examples = @ExampleObject(
+                                    value = "{ \"storeName\": \"그린회관\", \"storeImage\": \"http://jbfood.go.kr/datafloder/foodimg/f80393.jpg\", \"area\": \"김제시\", \"address\": \"전북 김제시 금산면 모악로 470\", \"smenu\": \"한정식, 오리주물럭, 산채비빔밥\", \"time\": \"09:30~19:30\", \"holyday\": \"연중무휴\", \"tel\": \"063-548-4090\", \"sno\": \"444\", \"park\": true, \"seat\": 150, \"lat\": \"35.7182605138428\", \"lng\": \"127.041805724665\" }"
+                            )
+                    )
+            )
+    })
+    public ResponseEntity<?> createBookmark(
+            @AuthenticationPrincipal UserDetails userDetails, // Spring Security에서 현재 인증된 사용자 정보 주입
+            @PathVariable int sno
+
+    ){
+        Integer userId = userDetails != null ?
+                authUtils.getUserIdFromUserDetails(userDetails) :
+                authUtils.getCurrentUserId();
+
+        log.info("userId: {}", userId);
+
+        ApiResult result = storeService.createBookmark(userId, sno);
+
+        // 응답 결과가 에러인 경우 처리 (ApiResponseDTO 타입으로 캐스팅 가능한 경우)
+        if (result instanceof ApiResponseDTO<?> errorResult) {
+            String code = errorResult.getCode(); //에러 코드 추출
+            HttpStatus status = ApiResponseCode.fromCode(code).getHttpStatus(); //코드에 맞는 http 상태 가져오기
+            //에러 응답 반환
+            return ResponseEntity.status(status).body(errorResult);
+        }
+
+        return ResponseEntity.status(201).build();
+    }
+
+
 
 
 //
