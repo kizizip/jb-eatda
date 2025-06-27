@@ -87,19 +87,8 @@ public class JbStoreDetailApiResponseDTO {
         @JsonProperty("FOOD")
         private String food;
 
-        @JsonProperty("TB_STARCOUNT")
-        private Integer tbStarcount;
-
-        @JsonProperty("F_LONGITUDE")
-        private String fLongitude;
-
         @JsonProperty("SMENU")
         private String smenu;
 
-        @JsonProperty("TB_STARSCORE")
-        private String tbStarscore;
-
-        @JsonProperty("F_LATITUDE")
-        private String fLatitude;
     }
 }

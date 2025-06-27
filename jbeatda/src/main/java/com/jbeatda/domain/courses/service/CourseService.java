@@ -49,6 +49,8 @@ public class CourseService {
     private final StoreRepository storeRepository;
     private final CourseStoreRepository courseStoreRepository;
 
+
+    // ai 코스 추천
     public ApiResult recommendCourse(CourseSelectionRequestDTO requestDTO) {
 
         // 1. 지역 기준으로 식당 조회 (전북향토음식점목록조회 api)
@@ -129,8 +131,8 @@ public class CourseService {
         }
     }
 
-    @Transactional
     //코스 생성 및 저장
+    @Transactional
     public ApiResult createCourse(int userId, CreateCourseRequestDTO requestDTO) {
 
         // 1. 유저 확인
@@ -165,6 +167,7 @@ public class CourseService {
 
                         // 3-4. StoreDetail을 Store 엔티티로 직접 변환 및 저장
                         Store newStore = Store.fromStoreDetail(storeDetail, coordinates);
+
                         return storeRepository.save(newStore);
                     });
 
@@ -189,6 +192,7 @@ public class CourseService {
     }
 
 
+    // 특정 사용자의 전체 코스 목록
     public ApiResult getCourseList(int userId){
 
         // 1. 유저 확인
@@ -212,7 +216,7 @@ public class CourseService {
 
     }
 
-
+    // 특정 코스 상세 조회
     public ApiResult getCourseDetail(int userId, int courseId){
         // 1. 유저 확인
         User user = userRepository.findById(userId)

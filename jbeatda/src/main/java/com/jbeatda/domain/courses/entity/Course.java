@@ -92,6 +92,7 @@ public class Course {
        for(CourseStore courseStore: course.getCourseStores()){
            CourseDetailResponseDTO.storeList store = CourseDetailResponseDTO.storeList.builder()
                    . storeId(courseStore.getStore().getId())
+                   .sno(courseStore.getStore().getSno())
                    .storeName(courseStore.getStore().getStoreName())
                    .address(courseStore.getStore().getAddress())
                    .smenu(courseStore.getStore().getSmenu())

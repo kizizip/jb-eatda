@@ -225,12 +225,7 @@ public class JbStoreApiClient {
                         .seq(getTextContent(item, "SEQ"))
                         .cktype(getTextContent(item, "CKTYPE"))
                         .food(getTextContent(item, "FOOD"))
-                        // 추가 필드들
-                        .tbStarcount(parseInteger(getTextContent(item, "TB_STARCOUNT")))
-                        .fLongitude(getTextContent(item, "F_LONGITUDE"))
                         .smenu(getTextContent(item, "SMENU"))
-                        .tbStarscore(getTextContent(item, "TB_STARSCORE"))
-                        .fLatitude(getTextContent(item, "F_LATITUDE"))
                         .build()
         );
     }
