@@ -33,4 +33,13 @@ public class UserRequestDTO {
     public static class RefreshTokenRequest {
         private String refreshToken;
     }
+
+    // 로그아웃 Request
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class LogoutRequest {
+        private String refreshToken; // 선택적으로 리프레시 토큰도 받을 수 있음
+    }
 }

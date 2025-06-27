@@ -42,4 +42,37 @@ public class UserResponseDTO {
         private String accessToken;
         private String refreshToken;
     }
+
+    // 로그아웃 Response
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class LogoutResponse {
+        private String message;
+        private LocalDateTime logoutTime;
+    }
+
+    // 회원 탈퇴 Response
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class WithdrawalResponse {
+        private String message;
+        private String email;
+        private LocalDateTime withdrawalTime;
+    }
+
+    // 회원 정보 조회 API
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UserInfoResponse {
+        private Integer userId;
+        private String email;
+        private String userName;
+        private LocalDateTime createdAt;
+    }
 }

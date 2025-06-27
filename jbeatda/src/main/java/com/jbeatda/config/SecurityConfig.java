@@ -3,6 +3,7 @@ package com.jbeatda.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
@@ -57,7 +58,8 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // 이 줄 추가!
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        .requestMatchers("/users/**").permitAll() // 회원가입, 로그인 API 허용
+                                .requestMatchers(HttpMethod.POST, "/users").permitAll() // 회원가입만
+                                .requestMatchers("/users/login", "/users/refresh").permitAll()
                         .requestMatchers("/test").permitAll()  // 테스트 엔드포인트도 허용
                         .requestMatchers("/static/**", "/css/**", "/js/**").permitAll()
 //                                .anyRequest().permitAll() // 임시로 모든 요청 허용
