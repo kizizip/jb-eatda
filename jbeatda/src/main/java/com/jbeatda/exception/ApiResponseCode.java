@@ -19,7 +19,7 @@ public enum ApiResponseCode {
     NO_STAMPS_FOUND("404-5", "사용자의 스탬프가 존재하지 않습니다.", HttpStatus.NOT_FOUND),
     UNAUTHORIZED("403-1", "권한이 없습니다.", HttpStatus.UNAUTHORIZED),
     SERVER_ERROR("500", "서버 내부 오류입니다.", HttpStatus.INTERNAL_SERVER_ERROR),
-
+    BOOKMARK_ALREADY_EXISTS("409-1", "이미 북마크된 식당입니다.", HttpStatus.CONFLICT),
 
     // 외부 API 관련 코드
     EXTERNAL_API_ERROR("503-1", "외부 서비스에 일시적인 문제가 발생했습니다.", HttpStatus.SERVICE_UNAVAILABLE),
