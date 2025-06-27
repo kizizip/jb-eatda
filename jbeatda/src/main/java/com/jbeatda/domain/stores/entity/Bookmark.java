@@ -1,5 +1,6 @@
 package com.jbeatda.domain.stores.entity;
 
+import com.jbeatda.DTO.responseDTO.BookmarkListResponseDTO;
 import com.jbeatda.domain.users.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -42,6 +43,17 @@ public class Bookmark {
         return Bookmark.builder()
                 .user(user)
                 .store(store)
+                .build();
+    }
+
+
+    public BookmarkListResponseDTO.BookmarkItemDTO toBookmarkItemDTO(Bookmark bookmark) {
+        return BookmarkListResponseDTO.BookmarkItemDTO.builder()
+                .storeId(bookmark.getStore().getId())
+                .sno(bookmark.getStore().getSno())
+                .storeName(bookmark.getStore().getStoreName())
+                .address(bookmark.getStore().getAddress())
+                .smenu(bookmark.getStore().getSmenu())
                 .build();
     }
 

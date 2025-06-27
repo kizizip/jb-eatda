@@ -149,17 +149,13 @@ public class StoreController {
     }
 
 
+
     @Operation(summary = "식당 즐겨찾기(북마크)", description = "해당 식당을 즐겨찾기에 등록합니다")
-    @PostMapping("/{sno}")
+    @PostMapping("/bookmark/{sno}")
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "200",
-                    content = @Content(
-                            mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            examples = @ExampleObject(
-                                    value = "{ \"storeName\": \"그린회관\", \"storeImage\": \"http://jbfood.go.kr/datafloder/foodimg/f80393.jpg\", \"area\": \"김제시\", \"address\": \"전북 김제시 금산면 모악로 470\", \"smenu\": \"한정식, 오리주물럭, 산채비빔밥\", \"time\": \"09:30~19:30\", \"holyday\": \"연중무휴\", \"tel\": \"063-548-4090\", \"sno\": \"444\", \"park\": true, \"seat\": 150, \"lat\": \"35.7182605138428\", \"lng\": \"127.041805724665\" }"
-                            )
-                    )
+                    responseCode = "201",
+                    description = "북마크 성공"
             )
     })
     public ResponseEntity<?> createBookmark(
@@ -185,6 +181,44 @@ public class StoreController {
 
         return ResponseEntity.status(201).build();
     }
+
+
+
+    @Operation(summary = "북마크 목록보기", description = "북마크 목록을 조회합니다.")
+    @GetMapping("/bookmark")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            examples = @ExampleObject(
+                                    value = "{ \"bookmarks\": [ { \"bookmarkId\": 1, \"storeName\": \"그린회관\", \"storeImage\": \"http://jbfood.go.kr/datafloder/foodimg/f80393.jpg\", \"area\": \"김제시\", \"address\": \"전북 김제시 금산면 모악로 470\", \"smenu\": \"산채비빔밥, 버섯전골, 한정식\", \"sno\": \"444\", \"createdAt\": \"2025-06-27T14:30:00\" }, { \"bookmarkId\": 2, \"storeName\": \"지평선바지락죽\", \"storeImage\": \"http://jbfood.go.kr/datafloder/foodimg/f80125.jpg\", \"area\": \"김제시\", \"address\": \"전북 김제시 중앙로 99\", \"smenu\": \"삼합, 바지락죽, 바지락전, 바지락정식\", \"sno\": \"464\", \"createdAt\": \"2025-06-27T13:15:00\" } ], \"totalCount\": 2 }"
+                            )
+                    )
+            )
+    })
+    public ResponseEntity<?> getBookmarkList(
+            @AuthenticationPrincipal UserDetails userDetails // Spring Security에서 현재 인증된 사용자 정보 주입
+    ){
+        Integer userId = userDetails != null ?
+                authUtils.getUserIdFromUserDetails(userDetails) :
+                authUtils.getCurrentUserId();
+
+        log.info("userId: {}", userId);
+
+        ApiResult result = storeService.getBookmarkList(userId);
+
+        // 응답 결과가 에러인 경우 처리 (ApiResponseDTO 타입으로 캐스팅 가능한 경우)
+        if (result instanceof ApiResponseDTO<?> errorResult) {
+            String code = errorResult.getCode(); //에러 코드 추출
+            HttpStatus status = ApiResponseCode.fromCode(code).getHttpStatus(); //코드에 맞는 http 상태 가져오기
+            //에러 응답 반환
+            return ResponseEntity.status(status).body(errorResult);
+        }
+
+        return ResponseEntity.ok(result);
+    }
+
 
 
 

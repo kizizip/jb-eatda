@@ -3,6 +3,7 @@ package com.jbeatda.domain.stores.service;
 import com.jbeatda.DTO.external.JbStoreDetailApiResponseDTO;
 import com.jbeatda.DTO.external.JbStoreListApiResponseDTO;
 import com.jbeatda.DTO.requestDTO.SearchStoreRequestDTO;
+import com.jbeatda.DTO.responseDTO.BookmarkListResponseDTO;
 import com.jbeatda.DTO.responseDTO.JbListResponseDTO;
 import com.jbeatda.DTO.responseDTO.StoreDetailResponseDTO;
 import com.jbeatda.DTO.responseDTO.StoreResponseDTO;
@@ -153,7 +154,8 @@ public class StoreService {
         // 3. 중복 북마크 확인
         Optional<Bookmark> existingBookmark = bookMarkRepository.findByUserAndStore(user, targetStore);
         if (existingBookmark.isPresent()) {
-            throw new IllegalStateException("이미 북마크된 매장입니다.");
+            log.warn("중복 북마크 시도 - userId: {}, storeId: {}", userId, targetStore.getId());
+            return ApiResponseDTO.fail(ApiResponseCode.BOOKMARK_ALREADY_EXISTS);
         }
 
 
@@ -166,6 +168,24 @@ public class StoreService {
 
         return null;
 
+
+    }
+
+    // 북마크 목록 리스트
+    public ApiResult getBookmarkList(int userId){
+        // 1. 유저 확인
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("유저를 찾을 수 없습니다."));
+
+        // 2. 북마크 리스트
+        List<Bookmark> bookmarks = bookMarkRepository.findByUserOrderByCreatedAtDesc(user);
+
+        // DTO 변환
+        BookmarkListResponseDTO response = BookmarkListResponseDTO.fromBookmarks(bookmarks);
+
+        log.info("사용자 북마크 조회 완료 - userId: {}, 북마크 개수: {}", userId, response.getBookmarks().size());
+
+        return response;
 
     }
 
