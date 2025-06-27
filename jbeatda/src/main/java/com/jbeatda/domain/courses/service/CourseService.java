@@ -34,6 +34,7 @@ import com.jbeatda.domain.courses.client.OpenAiClient;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -114,6 +115,20 @@ public class CourseService {
             AiCourseResponseDTO courseResponse = objectMapper.readValue(aiRecommendation, AiCourseResponseDTO.class);
             log.info("AI 응답 파싱 완료 - 코스명: {}, 매장 수: {}",
                     courseResponse.getCourseName(), courseResponse.getStoreCount());
+
+            // 매장 수가 3개를 초과하면 3개로 제한
+            if (courseResponse.getStores() != null && courseResponse.getStores().size() > 3) {
+                log.info("매장 수 제한 적용 - 기존: {}개 → 제한: 3개", courseResponse.getStores().size());
+
+                // visitOrder 기준으로 정렬 후 상위 3개만 선택
+                List<AiCourseResponseDTO.RecommendedStore> limitedStores = courseResponse.getStores().stream()
+                        .sorted((s1, s2) -> Integer.compare(s1.getVisitOrder(), s2.getVisitOrder()))
+                        .limit(3)
+                        .collect(Collectors.toList());
+
+                courseResponse.setStores(limitedStores);
+                courseResponse.setStoreCount(3);
+            }
 
             return courseResponse;
 
