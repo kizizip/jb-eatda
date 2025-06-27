@@ -63,4 +63,16 @@ public class UserResponseDTO {
         private String email;
         private LocalDateTime withdrawalTime;
     }
+
+    // 회원 정보 조회 API
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UserInfoResponse {
+        private Integer userId;
+        private String email;
+        private String userName;
+        private LocalDateTime createdAt;
+    }
 }
