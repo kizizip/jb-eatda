@@ -181,4 +181,40 @@ public class CourseController {
         return ResponseEntity.ok(result);
     }
 
+    @Operation(summary = "특정 코스 삭제 ", description = "특정 코스를 삭제합니다")
+    @DeleteMapping("/{courseId}")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            examples = @ExampleObject(
+                                    value = "{\"courseId\": 7, \"courseName\": \"고창 풍천장어 코스\", \"description\": \"고창에서 유명한 풍천장어를 즐길 수 있는 맛집 코스입니다. 풍천장어구이와 다양한 요리를 즐길 수 있습니다.\", \"storeCount\": 3, \"stores\": [{\"storeId\": 8, \"storeName\": \"물레방아\", \"address\": \"전북 고창군 아산면 선운사로 114-1\", \"smenu\": \"null\", \"visitOrder\": 1, \"lat\": \"35.5046114246751\", \"lng\": \"126.590967633698\"}, {\"storeId\": 9, \"storeName\": \"산장회관\", \"address\": \"전북 고창군 아산면 중촌길 20-5\", \"smenu\": \"null\", \"visitOrder\": 2, \"lat\": \"35.5039186365321\", \"lng\": \"126.585513269478\"}, {\"storeId\": 10, \"storeName\": \"고향식당\", \"address\": \"전북 고창군 아산면 중촌길 20-3\", \"smenu\": \"null\", \"visitOrder\": 3, \"lat\": \"35.5038185253821\", \"lng\": \"126.585415135032\"}]}"
+                            )
+                    )
+            )
+    })
+    public ResponseEntity<?> deleteCourse(
+            @AuthenticationPrincipal UserDetails userDetails,// Spring Security에서 현재 인증된 사용자 정보 주입
+            @PathVariable int courseId
+    ) {
+        Integer userId = userDetails != null ?
+                authUtils.getUserIdFromUserDetails(userDetails) :
+                authUtils.getCurrentUserId();
+
+        log.info("userId: {}", userId);
+
+        ApiResult result = courseService.deleteCourse(userId, courseId);
+
+        // 응답 결과가 에러인 경우 처리 (ApiResponseDTO 타입으로 캐스팅 가능한 경우)
+        if (result instanceof ApiResponseDTO<?> errorResult) {
+            String code = errorResult.getCode(); //에러 코드 추출
+            HttpStatus status = ApiResponseCode.fromCode(code).getHttpStatus(); //코드에 맞는 http 상태 가져오기
+            //에러 응답 반환
+            return ResponseEntity.status(status).body(errorResult);
+        }
+
+        return ResponseEntity.noContent().build();
+    }
+
 }

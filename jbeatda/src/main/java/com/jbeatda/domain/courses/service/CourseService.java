@@ -27,6 +27,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.jbeatda.domain.courses.client.OpenAiClient;
 
@@ -218,7 +219,7 @@ public class CourseService {
                 .orElseThrow(() -> new EntityNotFoundException("유저를 찾을 수 없습니다."));
 
         // 2. 코스 확인
-        Course course = courseRepository.findById(courseId)
+        Course course = courseRepository.findByIdAndUser(courseId, user)
                 .orElseThrow(() -> new EntityNotFoundException("코스를 찾을 수 없습니다."));
 
         CourseDetailResponseDTO response = course.toCourseDetailDTO(course);
@@ -226,4 +227,21 @@ public class CourseService {
         return response;
 
     }
+
+    public ApiResult deleteCourse(int userId, int courseId){
+        // 1. 유저 확인
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("유저를 찾을 수 없습니다."));
+
+        // 2. 코스 확인
+        Course course = courseRepository.findByIdAndUser(courseId, user)
+                .orElseThrow(() -> new EntityNotFoundException("코스를 찾을 수 없습니다."));
+
+        // 3. 삭제
+        courseRepository.delete(course);
+
+        return null;
+
+    }
+
 }
