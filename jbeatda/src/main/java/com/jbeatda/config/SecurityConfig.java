@@ -57,7 +57,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // 이 줄 추가!
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        .requestMatchers("/users/**").permitAll() // 회원가입, 로그인 API 허용
+                                .requestMatchers("/users", "/users/login", "/users/refresh").permitAll() // 로그아웃은 제외
                         .requestMatchers("/test").permitAll()  // 테스트 엔드포인트도 허용
                         .requestMatchers("/static/**", "/css/**", "/js/**").permitAll()
 //                                .anyRequest().permitAll() // 임시로 모든 요청 허용

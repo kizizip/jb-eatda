@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 @Service
@@ -155,6 +156,38 @@ public class UserService {
         } catch (Exception e) {
             log.error("토큰 갱신 실패: {}", e.getMessage());
             throw new IllegalArgumentException("토큰 갱신에 실패했습니다.");
+        }
+    }
+
+    // 로그아웃
+    public UserResponseDTO.LogoutResponse logout(UserRequestDTO.LogoutRequest request) {
+        try {
+            // 현재 요청에서 Access Token 추출
+            String accessToken = jwtProvider.getAccessTokenFromRequest();
+
+            if (accessToken != null && !accessToken.isEmpty()) {
+                // Access Token에서 사용자 정보 추출
+                Integer userId = jwtProvider.extractUserId(accessToken);
+                String email = jwtProvider.extractEmail(accessToken);
+
+                // Access Token을 블랙리스트에 추가
+                jwtProvider.addToAccessTokenBlacklist(accessToken);
+                log.info("Access Token 블랙리스트 추가 완료");
+
+                // Redis에서 Refresh Token 삭제
+                jwtProvider.deleteRefreshToken(userId);
+
+                return UserResponseDTO.LogoutResponse.builder()
+                        .message("로그아웃이 성공적으로 처리되었습니다.")
+                        .logoutTime(LocalDateTime.now())
+                        .build();
+            } else {
+                throw new IllegalArgumentException("유효한 토큰이 없습니다.");
+            }
+
+        } catch (Exception e) {
+            log.error("로그아웃 실패: {}", e.getMessage());
+            throw new IllegalArgumentException("로그아웃 처리 중 오류가 발생했습니다.");
         }
     }
 }

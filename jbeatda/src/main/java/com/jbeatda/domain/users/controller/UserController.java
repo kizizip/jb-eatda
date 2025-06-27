@@ -76,13 +76,15 @@ public class UserController {
     /**
      * 로그아웃
      */
-//    @PostMapping("/logout")
-//    public ResponseEntity<Void> logout() {
-//        try {
-//            userService.logout();
-//            return ResponseEntity.ok().build();
-//        } catch (IllegalStateException e) {
-//            throw new IllegalStateException(e.getMessage());
-//        }
-//    }
+    @PostMapping("/logout")
+    public ResponseEntity<UserResponseDTO.LogoutResponse> logout(
+            @Valid @RequestBody UserRequestDTO.LogoutRequest request) {
+        try {
+            UserResponseDTO.LogoutResponse response = userService.logout(request);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e.getMessage());
+        }
+    }
+
 }

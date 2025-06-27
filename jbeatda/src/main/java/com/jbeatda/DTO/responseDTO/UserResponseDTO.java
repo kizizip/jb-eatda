@@ -42,4 +42,14 @@ public class UserResponseDTO {
         private String accessToken;
         private String refreshToken;
     }
+
+    // 로그아웃 Response
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class LogoutResponse {
+        private String message;
+        private LocalDateTime logoutTime;
+    }
 }
