@@ -2,22 +2,22 @@ package com.jbeatda.domain.users.service;
 
 import com.jbeatda.DTO.requestDTO.UserRequestDTO;
 import com.jbeatda.DTO.responseDTO.UserResponseDTO;
+import com.jbeatda.S3Service;
 import com.jbeatda.config.JwtProvider;
+import com.jbeatda.config.S3Config;
 import com.jbeatda.domain.users.entity.User;
 import com.jbeatda.domain.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Collections;
 
@@ -30,13 +30,44 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+    private final S3Service s3Service;
 
     // 회원가입
     @Transactional
-    public UserResponseDTO.SignUpResponse signUp(UserRequestDTO.SignUpRequest request) {
+    public UserResponseDTO.SignUpResponse signUp(UserRequestDTO.SignUpRequest request, MultipartFile profileImage) {
         // 이메일 중복 체크
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
+        }
+
+        String profileImageUrl = null;
+
+        // 프로필 이미지 디버깅
+        System.out.println("=== 서비스 파일 디버깅 ===");
+        System.out.println("profileImage null? " + (profileImage == null));
+        if (profileImage != null) {
+            System.out.println("파일명: " + profileImage.getOriginalFilename());
+            System.out.println("파일 크기: " + profileImage.getSize());
+            System.out.println("파일 비어있음? " + profileImage.isEmpty());
+        }
+
+        // 프로필 이미지가 있는 경우 S3에 업로드
+        if (profileImage != null && !profileImage.isEmpty()) {
+            // 이미지 파일 유효성 검사
+            if (!isValidImageFile(profileImage)) {
+                throw new IllegalArgumentException("지원하지 않는 파일 형식입니다.");
+            }
+
+            if (profileImage.getSize() > 5 * 1024 * 1024) {
+                throw new IllegalArgumentException("파일 크기는 5MB를 초과할 수 없습니다.");
+            }
+
+            try {
+                profileImageUrl = s3Service.uploadFile(profileImage);
+            } catch (IOException e) {
+                log.error("프로필 이미지 업로드 실패: {}", e.getMessage());
+                throw new RuntimeException("프로필 이미지 업로드에 실패했습니다.", e);
+            }
         }
 
         // 사용자 생성
@@ -44,6 +75,7 @@ public class UserService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .userName(request.getUserName())
+                .profileImageUrl(profileImageUrl)
                 .build();
 
         User savedUser = userRepository.save(user);
@@ -52,12 +84,26 @@ public class UserService {
                 .userId(savedUser.getId())
                 .email(savedUser.getEmail())
                 .userName(savedUser.getUserName())
+                .profileImage(savedUser.getProfileImageUrl())
                 .createdAt(savedUser.getCreatedAt())
                 .build();
     }
 
+
+    // 이미지 파일 유효성 검사 메소드
+    private boolean isValidImageFile(MultipartFile file) {
+        String originalFilename = file.getOriginalFilename();
+        if (originalFilename == null) return false;
+
+        String extension = originalFilename.toLowerCase();
+        return extension.endsWith(".jpg") ||
+                extension.endsWith(".jpeg") ||
+                extension.endsWith(".png") ||
+                extension.endsWith(".gif");
+    }
+
     // 로그인
-    public UserResponseDTO.LoginResponse login(UserRequestDTO.LoginRequest request) {
+    public UserResponseDTO.LoginResponse login (UserRequestDTO.LoginRequest request) {
         try {
 
 
