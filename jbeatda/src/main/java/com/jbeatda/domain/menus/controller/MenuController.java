@@ -1,5 +1,6 @@
 package com.jbeatda.domain.menus.controller;
 
+import com.jbeatda.DTO.responseDTO.MenuOnlyResponseDTO;
 import com.jbeatda.DTO.responseDTO.MenuResponseDTO;
 import com.jbeatda.domain.menus.service.MenuService;
 import com.jbeatda.exception.ApiResponseCode;
@@ -69,4 +70,44 @@ public class MenuController {
 
         return ResponseEntity.ok(result);
     }
+
+    // 메뉴 전체 목록 조회
+    @Operation(summary = "전체 메뉴 조회", description = "모든 메뉴의 ID와 이름을 조회합니다.")
+    @GetMapping
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            examples = @ExampleObject(value = """
+                        [
+                          {
+                            "menuId": 1,
+                            "menuName": "비빔밥"
+                          },
+                          {
+                            "menuId": 2,
+                            "menuName": "돌솥밥"
+                          }
+                        ]
+                        """)
+                    )
+            )
+    })
+    public ResponseEntity<?> getAllMenus() {
+        ApiResult result = menuService.getAllMenus();
+
+        if (result instanceof ApiResponseDTO<?> errorResult) {
+            HttpStatus status = ApiResponseCode.fromCode(errorResult.getCode()).getHttpStatus();
+            return ResponseEntity.status(status).body(errorResult);
+        }
+
+        if (result instanceof MenuOnlyResponseDTO responseDTO) {
+            return ResponseEntity.ok(responseDTO.getMenus());
+        }
+
+        return ResponseEntity.ok(result);
+    }
+
+
 }

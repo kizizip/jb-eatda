@@ -1,5 +1,6 @@
 package com.jbeatda.domain.menus.service;
 
+import com.jbeatda.DTO.responseDTO.MenuOnlyResponseDTO;
 import com.jbeatda.DTO.responseDTO.MenuResponseDTO;
 import com.jbeatda.domain.menus.repository.MenuRepository;
 import com.jbeatda.exception.ApiResponseCode;
@@ -28,4 +29,19 @@ public class MenuService {
             return ApiResponseDTO.fail(ApiResponseCode.SERVER_ERROR);
         }
     }
+
+    public ApiResult getAllMenus() {
+        try {
+            var menus = menuRepository.findAll();
+            if (menus.isEmpty()) {
+                return ApiResponseDTO.fail(ApiResponseCode.NO_MENUS_FOUND);
+            }
+            return MenuOnlyResponseDTO.fromList(menus);
+        } catch (Exception e) {
+            log.error("전체 메뉴 조회 실패", e);
+            return ApiResponseDTO.fail(ApiResponseCode.SERVER_ERROR);
+        }
+    }
+
+
 }

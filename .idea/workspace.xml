@@ -5,11 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cd215a1f-9977-434b-b3a9-a56a96aef594" name="변경" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules/jbeatda.main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/jbeatda.main.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_amazonaws_aws_java_sdk_core_1_11_792.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_amazonaws_aws_java_sdk_kms_1_11_792.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_amazonaws_aws_java_sdk_s3_1_11_792.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_amazonaws_jmespath_java_1_11_792.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_apache_httpcomponents_httpclient_4_5_9.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules/jbeatda.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules/jbeatda.test.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/DTO/responseDTO/MenuOnlyResponseDTO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/menus/controller/MenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/menus/controller/MenuController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/menus/service/MenuService.java" beforeDir="false" afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/menus/service/MenuService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,7 +76,8 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main"
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "89-befeatmenu-list"
   }
 }]]></component>
   <component name="RecentsManager">
