@@ -36,7 +36,7 @@ public class StoreService {
     private final KakaoClient kakaoClient;
     private final StoreDetailMapper storeDetailMapper;
     private final JbStoreApiClient jbStoreApiClient;
-    private final BookmarkRepository bookMarkRepository;
+    private final BookmarkRepository bookmarkRepository;
     private final UserRepository userRepository;
 
     // 전체 가게 목록 조회
@@ -78,8 +78,8 @@ public class StoreService {
     }
 
     // 식당 정보 상세 조회
-    public ApiResult getStoresDetail(int storeId) {
-        String sno = String.valueOf(storeId);
+    public ApiResult getStoresDetail(int storeNo) {
+        String sno = String.valueOf(storeNo);
 
         // 1. store 테이블에서 sno로 검색
         Optional<Store> existingStore = storeRepository.findBySno(sno);
@@ -110,15 +110,15 @@ public class StoreService {
     }
 
     // 식당 즐겨찾기(북마크)
-    public ApiResult createBookmark(int userId, int storeId){
+    public ApiResult createBookmark(int userId, int storeNo){
 
-        String sno = String.valueOf(storeId);
+        String sno = String.valueOf(storeNo);
 
         // 1. 유저 확인
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("유저를 찾을 수 없습니다."));
 
-        // 1. store 테이블에서 sno로 검색
+        //  store 테이블에서 sno로 검색
         Optional<Store> existingStore = storeRepository.findBySno(sno);
 
         Store targetStore;
@@ -152,7 +152,7 @@ public class StoreService {
         }
 
         // 3. 중복 북마크 확인
-        Optional<Bookmark> existingBookmark = bookMarkRepository.findByUserAndStore(user, targetStore);
+        Optional<Bookmark> existingBookmark = bookmarkRepository.findByUserAndStore(user, targetStore);
         if (existingBookmark.isPresent()) {
             log.warn("중복 북마크 시도 - userId: {}, storeId: {}", userId, targetStore.getId());
             return ApiResponseDTO.fail(ApiResponseCode.BOOKMARK_ALREADY_EXISTS);
@@ -162,7 +162,7 @@ public class StoreService {
         // 4. 북마크 생성 및 저장
         Bookmark bookMark = Bookmark.createEntity(user, targetStore);
 
-        Bookmark savedBookMark = bookMarkRepository.save(bookMark);
+        Bookmark savedBookMark = bookmarkRepository.save(bookMark);
         log.info("북마크 생성 완료 - userId: {}, storeId: {}, bookmarkId: {}",
                 userId, targetStore.getId(), savedBookMark.getId());
 
@@ -178,7 +178,7 @@ public class StoreService {
                 .orElseThrow(() -> new EntityNotFoundException("유저를 찾을 수 없습니다."));
 
         // 2. 북마크 리스트
-        List<Bookmark> bookmarks = bookMarkRepository.findByUserOrderByCreatedAtDesc(user);
+        List<Bookmark> bookmarks = bookmarkRepository.findByUserOrderByCreatedAtDesc(user);
 
         // DTO 변환
         BookmarkListResponseDTO response = BookmarkListResponseDTO.fromBookmarks(bookmarks);
@@ -186,6 +186,27 @@ public class StoreService {
         log.info("사용자 북마크 조회 완료 - userId: {}, 북마크 개수: {}", userId, response.getBookmarks().size());
 
         return response;
+
+    }
+
+    // 북마크 삭제
+    public ApiResult deleteBookmark(int userId, int storeId){
+
+        // 1. 유저 확인
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("유저를 찾을 수 없습니다."));
+
+        //  store 테이블에서 sno로 검색
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new EntityNotFoundException("매장 정보를 찾을 수 없습니다." ));
+
+        Bookmark bookmark = bookmarkRepository.findByUserIdAndStoreId(userId, store.getId())
+                .orElseThrow(() -> new EntityNotFoundException("삭제할 북마크를 찾을 수 없습니다."));
+
+        // 4. 북마크 삭제
+        bookmarkRepository.delete(bookmark);
+
+        return null;
 
     }
 
