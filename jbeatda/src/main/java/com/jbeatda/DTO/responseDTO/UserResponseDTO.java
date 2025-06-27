@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -18,6 +19,7 @@ public class UserResponseDTO {
         private Integer userId;
         private String email;
         private String userName;
+        private String profileImage;
         private LocalDateTime createdAt;
     }
 

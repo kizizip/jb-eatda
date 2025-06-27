@@ -33,6 +33,9 @@ public class User {
     @Column(name = "user_name", nullable = false)
     private String userName;
 
+    @Column
+    private String profileImageUrl;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;

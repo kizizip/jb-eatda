@@ -1,6 +1,7 @@
 package com.jbeatda.DTO.requestDTO;
 
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 public class UserRequestDTO {
 
