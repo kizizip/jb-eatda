@@ -52,4 +52,15 @@ public class UserResponseDTO {
         private String message;
         private LocalDateTime logoutTime;
     }
+
+    // 회원 탈퇴 Response
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class WithdrawalResponse {
+        private String message;
+        private String email;
+        private LocalDateTime withdrawalTime;
+    }
 }

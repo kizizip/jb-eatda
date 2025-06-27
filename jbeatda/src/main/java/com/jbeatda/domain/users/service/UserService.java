@@ -190,4 +190,50 @@ public class UserService {
             throw new IllegalArgumentException("로그아웃 처리 중 오류가 발생했습니다.");
         }
     }
+
+    // 회원 탈퇴
+    @Transactional
+    public UserResponseDTO.WithdrawalResponse withdrawal() {
+        try {
+            log.info("=== 회원 탈퇴 시도 ===");
+
+            // 현재 요청에서 Access Token 추출하여 사용자 정보 획득
+            String accessToken = jwtProvider.getAccessTokenFromRequest();
+            if (accessToken == null || accessToken.isEmpty()) {
+                throw new IllegalArgumentException("유효한 토큰이 없습니다.");
+            }
+
+            // 토큰에서 사용자 정보 추출
+            Integer userId = jwtProvider.extractUserId(accessToken);
+            String email = jwtProvider.extractEmail(accessToken);
+
+            log.info("회원 탈퇴 요청 사용자: {} (ID: {})", email, userId);
+
+            // 사용자 조회
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+            // 1. Access Token 블랙리스트 추가
+            jwtProvider.addToAccessTokenBlacklist(accessToken);
+            log.info("Access Token 블랙리스트 추가 완료");
+
+            // 2. Refresh Token 삭제
+            jwtProvider.deleteRefreshToken(userId);
+            log.info("Refresh Token 삭제 완료");
+
+            // 3. 사용자 데이터 삭제
+            userRepository.delete(user);
+            log.info("사용자 데이터 삭제 완료");
+
+            return UserResponseDTO.WithdrawalResponse.builder()
+                    .message("회원 탈퇴가 성공적으로 처리되었습니다.")
+                    .email(email)
+                    .withdrawalTime(LocalDateTime.now())
+                    .build();
+
+        } catch (Exception e) {
+            log.error("회원 탈퇴 실패: {}", e.getMessage());
+            throw new IllegalArgumentException("회원 탈퇴 처리 중 오류가 발생했습니다.");
+        }
+    }
 }

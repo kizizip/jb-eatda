@@ -2,11 +2,14 @@ package com.jbeatda.domain.users.controller;
 
 import com.jbeatda.DTO.requestDTO.UserRequestDTO;
 import com.jbeatda.DTO.responseDTO.UserResponseDTO;
+import com.jbeatda.Mapper.AuthUtils;
 import com.jbeatda.domain.users.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +23,7 @@ import jakarta.validation.Valid;
 public class UserController {
 
     private final UserService userService;
+    private final AuthUtils authUtils;
 
     @GetMapping("/test")
     public ResponseEntity<String> test() {
@@ -85,6 +89,33 @@ public class UserController {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         }
+    }
+
+    /**
+     * 회원 탈퇴
+     */
+    @DeleteMapping
+    public ResponseEntity<UserResponseDTO.WithdrawalResponse> withdrawal() {
+        try {
+            UserResponseDTO.WithdrawalResponse response = userService.withdrawal();
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e.getMessage());
+        }
+    }
+
+
+
+
+//    회원 정보 조회
+    @GetMapping
+    public ResponseEntity<?> getUserInfo(
+            @AuthenticationPrincipal UserDetails userDetails
+
+    ) {
+        Integer userId = userDetails != null ?
+                authUtils.getUserIdFromUserDetails(userDetails) :
+                authUtils.getCurrentUserId();
     }
 
 }
