@@ -71,7 +71,7 @@ public class StoreController {
 
 
     @Operation(summary = "식당 검색", description = "식당을 검색합니다.")
-    @PostMapping("/search/")
+    @PostMapping("/search")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
