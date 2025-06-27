@@ -17,4 +17,7 @@ public interface BookmarkRepository extends JpaRepository <Bookmark, Integer>  {
     // 사용자의 모든 북마크 조회
     List<Bookmark> findByUserOrderByCreatedAtDesc(User user);
 
+
+    Optional<Bookmark> findByUserIdAndStoreId(int userId, int storeId);
+
 }

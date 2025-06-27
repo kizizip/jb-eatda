@@ -220,7 +220,37 @@ public class StoreController {
     }
 
 
+    @Operation(summary = "북마크 삭제", description = "해당 식당 북마크를 삭제합니다.")
+    @DeleteMapping("/bookmark/{storeId}")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "북마크 삭제 성공"
+            )
+    })
+    public ResponseEntity<?> deleteBookmark(
+            @AuthenticationPrincipal UserDetails userDetails, // Spring Security에서 현재 인증된 사용자 정보 주입
+            @PathVariable int storeId
 
+    ){
+        Integer userId = userDetails != null ?
+                authUtils.getUserIdFromUserDetails(userDetails) :
+                authUtils.getCurrentUserId();
+
+        log.info("userId: {}", userId);
+
+        ApiResult result = storeService.deleteBookmark(userId, storeId);
+
+        // 응답 결과가 에러인 경우 처리 (ApiResponseDTO 타입으로 캐스팅 가능한 경우)
+        if (result instanceof ApiResponseDTO<?> errorResult) {
+            String code = errorResult.getCode(); //에러 코드 추출
+            HttpStatus status = ApiResponseCode.fromCode(code).getHttpStatus(); //코드에 맞는 http 상태 가져오기
+            //에러 응답 반환
+            return ResponseEntity.status(status).body(errorResult);
+        }
+
+        return ResponseEntity.status(204).build();
+    }
 
 
 //
