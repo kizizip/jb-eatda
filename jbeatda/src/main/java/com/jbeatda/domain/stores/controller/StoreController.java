@@ -150,7 +150,7 @@ public class StoreController {
 
 
     @Operation(summary = "식당 즐겨찾기(북마크)", description = "해당 식당을 즐겨찾기에 등록합니다")
-    @PutMapping("/{sno}")
+    @PostMapping("/{sno}")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
