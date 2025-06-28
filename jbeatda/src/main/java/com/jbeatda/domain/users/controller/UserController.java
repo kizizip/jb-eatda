@@ -180,6 +180,7 @@ public class UserController {
                     .userId(user.getId())
                     .email(user.getEmail())
                     .userName(user.getUserName())
+                    .profileImage(user.getProfileImageUrl())
                     .createdAt(user.getCreatedAt())
                     .build();
 
