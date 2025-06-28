@@ -8,5 +8,5 @@ import lombok.*;
 @AllArgsConstructor
 public class StampRequestDTO {
     private Integer menuId;
-    private String image;
+    // private String image;
 }

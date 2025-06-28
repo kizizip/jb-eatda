@@ -106,7 +106,6 @@ public class UserService {
     public UserResponseDTO.LoginResponse login (UserRequestDTO.LoginRequest request) {
         try {
 
-
             log.info("=== 로그인 시도 ===");
             log.info("요청 이메일: {}", request.getEmail());
             log.info("요청 비밀번호 길이: {}", request.getPassword() != null ? request.getPassword().length() : "null");
