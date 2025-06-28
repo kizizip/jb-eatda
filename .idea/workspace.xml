@@ -5,10 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cd215a1f-9977-434b-b3a9-a56a96aef594" name="변경" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/DTO/requestDTO/StampRequestDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/DTO/requestDTO/StampRequestDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/stamps/controller/StampController.java" beforeDir="false" afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/stamps/controller/StampController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/stamps/service/StampService.java" beforeDir="false" afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/stamps/service/StampService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/DTO/responseDTO/UserResponseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/DTO/responseDTO/UserResponseDTO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/users/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/jbeatda/src/main/java/com/jbeatda/domain/users/service/UserService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -49,7 +46,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="be/feat/docker-test" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -71,7 +68,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "be/fix/stamp-s3-connect"
+    "git-widget-placeholder": "main"
   }
 }]]></component>
   <component name="RecentsManager">

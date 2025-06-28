@@ -75,6 +75,7 @@ public class UserResponseDTO {
         private Integer userId;
         private String email;
         private String userName;
+        private String profileImage;
         private LocalDateTime createdAt;
     }
 }
