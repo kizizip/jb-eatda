@@ -13,6 +13,7 @@ public enum ApiResponseCode {
     // 실패
     BAD_REQUEST("400", "잘못된 요청입니다.", HttpStatus.BAD_REQUEST),
     NOT_FOUND_USER("404-1", "유저를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    FORBIDDEN("403", "권한이 없습니다.", HttpStatus.FORBIDDEN),
     NO_STORES_FOUND("404-2", "저장된 가게가 없습니다.", HttpStatus.NOT_FOUND),
     NO_AREAS_FOUND("404-3", "저장된 지역이 없습니다", HttpStatus.NOT_FOUND),
     NO_MENUS_FOUND("404-4", "메뉴를 찾을 수 없습니다", HttpStatus.NOT_FOUND),
