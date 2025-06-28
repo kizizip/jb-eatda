@@ -21,6 +21,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RestController
@@ -66,13 +67,16 @@ public class StampController {
             mediaType = MediaType.APPLICATION_JSON_VALUE,
             examples = @ExampleObject(value = "{\"stampId\": 6, \"menuId\": 5, \"image\": \"https://example.com/images/stamp_new.png\", \"createdAt\": \"2025-06-26T03:33:10.745822\"}")
     )))
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createStamp(
             @AuthenticationPrincipal UserDetails userDetails,
-            @RequestBody StampRequestDTO request) {
+            @ModelAttribute StampRequestDTO request,
+            @RequestPart(value = "image", required = false) MultipartFile stampImage) {
         Integer userId = resolveUserId(userDetails);
         log.info("createStamp for userId={}", userId);
-        ApiResult result = stampService.createStamp(request);
+
+        ApiResult result = stampService.createStamp(request, stampImage);
+
         return buildResponse(result, HttpStatus.CREATED);
     }
 
