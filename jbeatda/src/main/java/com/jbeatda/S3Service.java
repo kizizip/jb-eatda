@@ -170,4 +170,24 @@ public class S3Service {
 
         return outputStream;
     }
+
+    // 이미지 삭제
+    public void deleteFile(String fileUrl) {
+        if (fileUrl == null || fileUrl.isBlank()) {
+            log.warn("삭제할 파일 URL이 비어있습니다.");
+            return;
+        }
+
+        String fileName = extractFileNameFromUrl(fileUrl);
+        amazonS3Client.deleteObject(bucket, fileName);
+        log.info("S3에서 파일 삭제 완료: {}", fileName);
+    }
+
+
+
+    private String extractFileNameFromUrl(String fileUrl) {
+        String bucketUrl = amazonS3Client.getUrl(bucket, "").toString(); // ex: https://bucket-name.s3.amazonaws.com/
+        return fileUrl.replace(bucketUrl, ""); // 전체 경로 추출 (폴더 포함)
+    }
+
 }

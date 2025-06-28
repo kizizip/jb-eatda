@@ -149,4 +149,39 @@ public class StampService {
                 extension.endsWith(".png") ||
                 extension.endsWith(".gif");
     }
+
+    // 스탬프 삭제
+    public ApiResult deleteStamp(Integer stampId) {
+        try {
+            Integer currentUserId = authUtils.getCurrentUserId();
+
+            Optional<Stamp> stampOpt = stampRepository.findById(stampId);
+            if (stampOpt.isEmpty()) {
+                return ApiResponseDTO.fail(ApiResponseCode.NO_STAMPS_FOUND);
+            }
+
+            Stamp stamp = stampOpt.get();
+
+            if (!stamp.getUser().getId().equals(currentUserId)) {
+                return ApiResponseDTO.fail(ApiResponseCode.FORBIDDEN);
+            }
+
+            if (stamp.getImage() != null && !stamp.getImage().isEmpty()) {
+                try {
+                    s3Service.deleteFile(stamp.getImage());
+                } catch (Exception e) {
+                    log.warn("S3 이미지 삭제 실패: {}", e.getMessage());
+                }
+            }
+
+            stampRepository.delete(stamp);
+            return ApiResponseDTO.success(null);
+
+        } catch (Exception e) {
+            log.error("deleteStamp error", e);
+            return ApiResponseDTO.fail(ApiResponseCode.SERVER_ERROR);
+        }
+    }
+
+
 }

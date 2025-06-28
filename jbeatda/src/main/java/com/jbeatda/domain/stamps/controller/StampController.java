@@ -96,4 +96,22 @@ public class StampController {
         return ResponseEntity.status(successStatus)
                 .body(result instanceof StampResponseDTO dto ? dto.getStamps() : result);
     }
+
+    // 스탬프 삭제
+    @Operation(summary = "스탬프 삭제", description = "인증된 사용자가 자신의 스탬프를 삭제합니다.")
+    @ApiResponses(value = @ApiResponse(responseCode = "200", description = "삭제 성공", content = @Content(
+            mediaType = MediaType.APPLICATION_JSON_VALUE,
+            examples = @ExampleObject(value = "{\"code\": \"200\", \"message\": \"정상 처리되었습니다.\"}"))))
+    @DeleteMapping("/{stampId}")
+    public ResponseEntity<?> deleteStamp(@AuthenticationPrincipal UserDetails userDetails,
+                                         @PathVariable Integer stampId) {
+        Integer userId = resolveUserId(userDetails);
+        log.info("deleteStamp for userId: {}, stampId: {}", userId, stampId);
+
+        // userId 파라미터를 서비스에 넘기지 않고, 서비스 내부에서 authUtils.getCurrentUserId() 호출하도록 변경 권장
+        ApiResult result = stampService.deleteStamp(stampId);
+        return buildResponse(result, HttpStatus.OK);
+    }
+
+
 }
