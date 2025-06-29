@@ -258,27 +258,58 @@ public class UserService {
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
-            // 1. Access Token 블랙리스트 추가
-            jwtProvider.addToAccessTokenBlacklist(accessToken);
-            log.info("Access Token 블랙리스트 추가 완료");
+            // 탈퇴 시각과 이메일 미리 저장
+            LocalDateTime withdrawalTime = LocalDateTime.now();
+            String userEmail = user.getEmail();
 
-            // 2. Refresh Token 삭제
-            jwtProvider.deleteRefreshToken(userId);
-            log.info("Refresh Token 삭제 완료");
+            log.info("삭제할 연관 데이터 확인:");
+            log.info("- 스탬프: {}개", user.getStamps().size());
+            log.info("- 코스: {}개", user.getCourses().size());
+            log.info("- 북마크: {}개", user.getBookmarks().size());
 
-            // 3. 사용자 데이터 삭제
-            userRepository.delete(user);
-            log.info("사용자 데이터 삭제 완료");
+            try {
+                // 연관 엔티티들이 CASCADE.ALL로 설정되어 있어서 자동으로 삭제됨
+                userRepository.delete(user);
+                log.info("사용자 및 연관 데이터 삭제 완료");
+
+            } catch (Exception e) {
+                log.error("사용자 데이터 삭제 중 오류: {}", e.getMessage(), e);
+
+                // 구체적인 오류 메시지 제공
+                if (e.getMessage().contains("foreign key constraint")) {
+                    throw new RuntimeException("연관된 데이터로 인해 삭제할 수 없습니다. 관리자에게 문의하세요.");
+                } else {
+                    throw new RuntimeException("사용자 데이터 삭제에 실패했습니다: " + e.getMessage());
+                }
+            }
+
+            // 토큰 정리 (사용자 삭제 후)
+            try {
+                jwtProvider.addToAccessTokenBlacklist(accessToken);
+                log.info("Access Token 블랙리스트 추가 완료");
+            } catch (Exception e) {
+                log.warn("Access Token 블랙리스트 추가 실패: {}", e.getMessage());
+            }
+
+            try {
+                jwtProvider.deleteRefreshToken(userId);
+                log.info("Refresh Token 삭제 완료");
+            } catch (Exception e) {
+                log.warn("Refresh Token 삭제 실패: {}", e.getMessage());
+            }
 
             return UserResponseDTO.WithdrawalResponse.builder()
                     .message("회원 탈퇴가 성공적으로 처리되었습니다.")
-                    .email(email)
-                    .withdrawalTime(LocalDateTime.now())
+                    .email(userEmail)
+                    .withdrawalTime(withdrawalTime)
                     .build();
 
+        } catch (IllegalArgumentException e) {
+            log.error("회원 탈퇴 실패 (클라이언트 오류): {}", e.getMessage());
+            throw e;
         } catch (Exception e) {
-            log.error("회원 탈퇴 실패: {}", e.getMessage());
-            throw new IllegalArgumentException("회원 탈퇴 처리 중 오류가 발생했습니다.");
+            log.error("회원 탈퇴 실패 (서버 오류): {}", e.getMessage(), e);
+            throw new RuntimeException("회원 탈퇴 처리 중 서버 오류가 발생했습니다: " + e.getMessage());
         }
     }
 }

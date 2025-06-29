@@ -2,6 +2,7 @@ package com.jbeatda.domain.users.entity;
 
 import com.jbeatda.domain.courses.entity.Course;
 import com.jbeatda.domain.stamps.entity.Stamp;
+import com.jbeatda.domain.stores.entity.Bookmark;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -48,4 +49,8 @@ public class User {
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Stamp> stamps = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Bookmark> bookmarks = new ArrayList<>();
 }
