@@ -20,6 +20,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/stores")
@@ -230,7 +232,7 @@ public class StoreController {
     })
     public ResponseEntity<?> deleteBookmark(
             @AuthenticationPrincipal UserDetails userDetails, // Spring Security에서 현재 인증된 사용자 정보 주입
-            @PathVariable int storeId
+            @RequestBody List<Integer> storeIds
 
     ){
         Integer userId = userDetails != null ?
@@ -239,7 +241,7 @@ public class StoreController {
 
         log.info("userId: {}", userId);
 
-        ApiResult result = storeService.deleteBookmark(userId, storeId);
+        ApiResult result = storeService.deleteBookmark(userId, storeIds);
 
         // 응답 결과가 에러인 경우 처리 (ApiResponseDTO 타입으로 캐스팅 가능한 경우)
         if (result instanceof ApiResponseDTO<?> errorResult) {

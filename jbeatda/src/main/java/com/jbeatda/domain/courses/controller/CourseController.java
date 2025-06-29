@@ -21,6 +21,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/courses")
@@ -189,7 +191,7 @@ public class CourseController {
     )
     public ResponseEntity<?> deleteCourse(
             @AuthenticationPrincipal UserDetails userDetails,// Spring Security에서 현재 인증된 사용자 정보 주입
-            @PathVariable int courseId
+            @RequestBody List<Integer> courseIds
     ) {
         Integer userId = userDetails != null ?
                 authUtils.getUserIdFromUserDetails(userDetails) :
@@ -197,7 +199,7 @@ public class CourseController {
 
         log.info("userId: {}", userId);
 
-        ApiResult result = courseService.deleteCourse(userId, courseId);
+        ApiResult result = courseService.deleteCourses(userId, courseIds);
 
         // 응답 결과가 에러인 경우 처리 (ApiResponseDTO 타입으로 캐스팅 가능한 경우)
         if (result instanceof ApiResponseDTO<?> errorResult) {

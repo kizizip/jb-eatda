@@ -21,7 +21,11 @@ public enum ApiResponseCode {
     UNAUTHORIZED("403-1", "권한이 없습니다.", HttpStatus.UNAUTHORIZED),
     SERVER_ERROR("500", "서버 내부 오류입니다.", HttpStatus.INTERNAL_SERVER_ERROR),
     BOOKMARK_ALREADY_EXISTS("409-1", "이미 북마크된 식당입니다.", HttpStatus.CONFLICT),
-
+    COURSE_NOT_FOUND("404-6", "코스를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    COURSE_ACCESS_DENIED("403-1", "코스에 대한 권한이 없습니다.", HttpStatus.FORBIDDEN),
+    COURSE_DELETE_FAILED("500-1", "코스 삭제에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
+    INVALID_COURSE_IDS("400-1", "유효하지 않은 코스 ID입니다.", HttpStatus.BAD_REQUEST),
+    BOOKMARK_NOT_FOUND("404-7", "북마크를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     // 외부 API 관련 코드
     EXTERNAL_API_ERROR("503-1", "외부 서비스에 일시적인 문제가 발생했습니다.", HttpStatus.SERVICE_UNAVAILABLE),
     API_AUTH_ERROR("503-2", "외부 서비스 인증에 실패했습니다.", HttpStatus.SERVICE_UNAVAILABLE),
