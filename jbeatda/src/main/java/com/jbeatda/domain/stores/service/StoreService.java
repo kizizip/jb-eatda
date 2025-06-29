@@ -19,12 +19,14 @@ import com.jbeatda.domain.users.entity.User;
 import com.jbeatda.domain.users.repository.UserRepository;
 import com.jbeatda.exception.*;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -190,27 +192,66 @@ public class StoreService {
     }
 
     // 북마크 삭제
-    public ApiResult deleteBookmark(int userId, int storeId){
+    @Transactional
+    public ApiResult deleteBookmark(int userId, List<Integer> storeIds) {
+        try {
+            // 1. 입력 검증
+            if (storeIds == null || storeIds.isEmpty()) {
+                return ApiResponseDTO.fail(ApiResponseCode.BAD_REQUEST);
+            }
 
-        // 1. 유저 확인
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("유저를 찾을 수 없습니다."));
+            // 2. 유저 존재 확인
+            boolean userExists = userRepository.existsById(userId);
+            if (!userExists) {
+                return ApiResponseDTO.fail(ApiResponseCode.NOT_FOUND_USER);
+            }
 
-        //  store 테이블에서 sno로 검색
-        Store store = storeRepository.findById(storeId)
-                .orElseThrow(() -> new EntityNotFoundException("매장 정보를 찾을 수 없습니다." ));
+            // 3. 해당 유저의 북마크 중 존재하는 매장 ID들만 조회
+            List<Integer> validStoreIds = bookmarkRepository.findStoreIdsByUserIdAndStoreIdIn(userId, storeIds);
 
-        Bookmark bookmark = bookmarkRepository.findByUserIdAndStoreId(userId, store.getId())
-                .orElseThrow(() -> new EntityNotFoundException("삭제할 북마크를 찾을 수 없습니다."));
+            if (validStoreIds.isEmpty()) {
+                return ApiResponseDTO.fail(ApiResponseCode.BOOKMARK_NOT_FOUND);
+            }
 
-        // 4. 북마크 삭제
-        bookmarkRepository.delete(bookmark);
+            // 4. 존재하지 않는 북마크 체크
+            if (validStoreIds.size() != storeIds.size()) {
+                List<Integer> notFoundStoreIds = storeIds.stream()
+                        .filter(id -> !validStoreIds.contains(id))
+                        .collect(Collectors.toList());
 
-        return null;
+                log.warn("존재하지 않는 북마크 매장 ID들: {}", notFoundStoreIds);
 
+                String errorMessage = String.format("다음 매장들의 북마크를 찾을 수 없습니다: %s", notFoundStoreIds);
+                return new ApiResponseDTO<>(
+                        ApiResponseCode.BOOKMARK_NOT_FOUND.getCode(),
+                        errorMessage,
+                        null
+                );
+            }
+
+            // 5. 일괄 삭제 실행
+            int deletedCount = bookmarkRepository.deleteByUserIdAndStoreIdIn(userId, validStoreIds);
+
+            if (deletedCount != validStoreIds.size()) {
+                log.error("북마크 삭제 예상 개수와 실제 삭제 개수가 다름. 예상: {}, 실제: {}",
+                        validStoreIds.size(), deletedCount);
+                return ApiResponseDTO.fail(ApiResponseCode.SERVER_ERROR);
+            }
+
+            log.info("북마크 삭제 완료 - userId: {}, 삭제된 북마크 수: {}", userId, deletedCount);
+            return null; // 성공
+
+        } catch (Exception e) {
+            log.error("북마크 삭제 중 오류 발생 - userId: {}, storeIds: {}", userId, storeIds, e);
+            return ApiResponseDTO.fail(ApiResponseCode.SERVER_ERROR);
+        }
     }
 
-
+    // 단일 북마크 삭제 (오버로딩)
+    @Transactional
+    public ApiResult deleteBookmark(int userId, int storeId) {
+        return deleteBookmark(userId, List.of(storeId));
+    }
 
 
 }

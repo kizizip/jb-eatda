@@ -18,10 +18,7 @@ import com.jbeatda.domain.stores.entity.Store;
 import com.jbeatda.domain.stores.repository.StoreRepository;
 import com.jbeatda.domain.users.entity.User;
 import com.jbeatda.domain.users.repository.UserRepository;
-import com.jbeatda.exception.AiException;
-import com.jbeatda.exception.ApiResponseCode;
-import com.jbeatda.exception.ApiResult;
-import com.jbeatda.exception.ExternalApiException;
+import com.jbeatda.exception.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -247,20 +244,71 @@ public class CourseService {
 
     }
 
-    public ApiResult deleteCourse(int userId, int courseId){
-        // 1. 유저 확인
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("유저를 찾을 수 없습니다."));
-
-        // 2. 코스 확인
-        Course course = courseRepository.findByIdAndUser(courseId, user)
-                .orElseThrow(() -> new EntityNotFoundException("코스를 찾을 수 없습니다."));
-
-        // 3. 삭제
+    @Transactional
+    private void deleteCourseTransaction(Course course) {
         courseRepository.delete(course);
-
-        return null;
-
     }
+
+    // 다중 삭제도 동일하게 수정
+    public ApiResult deleteCourses(int userId, List<Integer> courseIds) {
+        try {
+            // 입력 검증
+            if (courseIds == null || courseIds.isEmpty()) {
+                return ApiResponseDTO.fail(ApiResponseCode.INVALID_COURSE_IDS);
+            }
+
+            // 유저 확인
+            User user = userRepository.findById(userId)
+                    .orElse(null);  // orElseThrow() 대신 orElse(null)
+
+            if (user == null) {
+                return ApiResponseDTO.fail(ApiResponseCode.NOT_FOUND_USER);
+            }
+
+            // 해당 유저의 코스들 조회
+            List<Course> coursesToDelete = courseRepository.findByIdInAndUser(courseIds, user);
+
+            if (coursesToDelete.isEmpty()) {
+                return ApiResponseDTO.fail(ApiResponseCode.COURSE_NOT_FOUND);
+            }
+
+            // 존재하지 않는 코스 ID 확인
+            if (coursesToDelete.size() != courseIds.size()) {
+                List<Integer> foundIds = coursesToDelete.stream()
+                        .map(Course::getId)
+                        .collect(Collectors.toList());
+
+                List<Integer> notFoundIds = courseIds.stream()
+                        .filter(id -> !foundIds.contains(id))
+                        .collect(Collectors.toList());
+
+                log.warn("존재하지 않거나 권한이 없는 코스 ID들: {}", notFoundIds);
+                String errorMessage = String.format("일부 코스를 찾을 수 없거나 권한이 없습니다. 코스 ID: %s", notFoundIds);
+                return new ApiResponseDTO<>(
+                        ApiResponseCode.COURSE_NOT_FOUND.getCode(),
+                        errorMessage,
+                        null
+                );
+            }
+
+            // 일괄 삭제 (트랜잭션 처리)
+            deleteCoursesTransaction(coursesToDelete);
+
+            log.info("코스 삭제 완료 - userId: {}, 삭제된 코스 수: {}", userId, coursesToDelete.size());
+            return null;
+
+        } catch (Exception e) {
+            log.error("코스 삭제 중 오류 발생 - userId: {}, courseIds: {}", userId, courseIds, e);
+            return ApiResponseDTO.fail(ApiResponseCode.SERVER_ERROR);
+        }
+    }
+
+    // 일괄 삭제 트랜잭션
+    @Transactional
+    private void deleteCoursesTransaction(List<Course> courses) {
+        courseRepository.deleteAll(courses);
+    }
+
+
 
 }
